@@ -1,14 +1,15 @@
 /** @file
    Interfejs klasy wielomianów
 
-   @author Jakub Pawlewicz <pan@mimuw.edu.pl>, TODO
+   @author Jakub Pawlewicz <pan@mimuw.edu.pl>
    @copyright Uniwersytet Warszawski
-   @date 2017-04-24, TODO
+   @date 2017-03-04
 */
 
 #ifndef __POLY_H__
 #define __POLY_H__
 
+#include <assert.h>
 #include <stdbool.h>
 #include <stddef.h>
 
@@ -18,13 +19,26 @@ typedef long poly_coeff_t;
 /** Typ wykładników wielomianu */
 typedef int poly_exp_t;
 
+struct Mono;
+
 /**
  * Struktura przechowująca wielomian
- * TODO
+ * Wielomian to albo współczynnik (wtedy `arr == NULL`),
+ * albo lista jednomianów.
  */
 typedef struct Poly
 {
-    /* TODO */
+    /**
+     * Współczynnik lub długość wielomianu w liczbie jednomianów
+     * Jeżeli `arr == NULL`, wtedy jest to współczynnik będący stałą.
+     * W p.p. jest to lista jednomianów i taki wielomian nazywamy _normalnym_.
+     */
+    union {
+         poly_coeff_t coeff;
+         unsigned     size;
+    };
+    /** Tablica przechowująca listę jednomianów */
+    struct Mono *arr;
 } Poly;
 
 /**
@@ -37,7 +51,6 @@ typedef struct Mono
 {
     Poly p; ///< współczynnik
     poly_exp_t exp; ///< wykładnik
-    /* TODO */
 } Mono;
 
 /**
@@ -47,7 +60,7 @@ typedef struct Mono
  */
 static inline Poly PolyFromCoeff(poly_coeff_t c)
 {
-    /* TODO */
+    return (Poly) {.coeff = c, .arr = NULL};
 }
 
 /**
@@ -56,8 +69,10 @@ static inline Poly PolyFromCoeff(poly_coeff_t c)
  */
 static inline Poly PolyZero()
 {
-    /* TODO */
+    return PolyFromCoeff(0);
 }
+
+static inline bool PolyIsZero(const Poly *p);
 
 /**
  * Tworzy jednomian `p * x^e`.
@@ -68,6 +83,7 @@ static inline Poly PolyZero()
  */
 static inline Mono MonoFromPoly(const Poly *p, poly_exp_t e)
 {
+    assert(e == 0 || !PolyIsZero(p));
     return (Mono) {.p = *p, .exp = e};
 }
 
@@ -78,7 +94,7 @@ static inline Mono MonoFromPoly(const Poly *p, poly_exp_t e)
  */
 static inline bool PolyIsCoeff(const Poly *p)
 {
-    /* TODO */
+    return p->arr == NULL;
 }
 
 /**
@@ -88,7 +104,7 @@ static inline bool PolyIsCoeff(const Poly *p)
  */
 static inline bool PolyIsZero(const Poly *p)
 {
-    /* TODO */
+    return PolyIsCoeff(p) && p->coeff == 0;
 }
 
 /**
@@ -103,7 +119,7 @@ void PolyDestroy(Poly *p);
  */
 static inline void MonoDestroy(Mono *m)
 {
-    /* TODO */
+    PolyDestroy(&m->p);
 }
 
 /**
@@ -120,7 +136,7 @@ Poly PolyClone(const Poly *p);
  */
 static inline Mono MonoClone(const Mono *m)
 {
-    /* TODO */
+    return (Mono) {.p = PolyClone(&m->p), .exp = m->exp};
 }
 
 /**
