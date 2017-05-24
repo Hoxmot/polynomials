@@ -13,38 +13,52 @@
 #include "poly.h"
 #include "stos.h"
 
-Stack stos;
+Stack stos; ///< globalny stos
 
-long wiersz, kolumna;
+long wiersz; ///< globalna zmienna trzymająca numer wiersza
+long kolumna; ///< globalna zmienna trzymająca numer kolumny
 
+/** @brief Struktura przechowywująca wartość typu int lub błąd 
+ * */
 struct ErrorInt {
 	
-	bool err;
-	int n;
+	bool err; ///< sprawdza czy jest błąd
+	int n; ///< trzyma wartość
 	
 };
 	
+/** @brief Struktura przechowywująca wartość typu long lub błąd
+ * */
 struct ErrorLong {
 	
-	bool err;
-	long n;
+	bool err; ///< sprawdza czy jest błąd
+	long n; ///< trzyma wartość
 	
 };
 
+/** @brief Struktura przetrzymująca wartość typu unsigned lub błąd
+ * */
 struct ErrorUInt {
 	
-	bool err;
-	unsigned n;
+	bool err; ///< sprawdza czy jest błąd
+	unsigned n; ///< trzyma wartość
 	
 };
 
+/** @brief Struktura przechowująca coeff lub błąd.
+ * */
 struct ErrorCoeff {
 	
-	bool err;
-	poly_coeff_t n;
+	bool err; ///< sprawdza czy jest błąd
+	poly_coeff_t n; ///< trzymana wartośc
 	
 };
 
+/** @brief Wczytywanie współczynnika.
+ * Jest później przekazywany do PolyFromCoeff();
+ * @param[in] i : obecnie wczytany znak
+ * @return wartość do przekazania PolyFromCoeff() lub błąd
+ * */
 ErrorCoeff coeff(int i){
 	ErrorCoeff odp;
 	odp.err = false;
@@ -99,78 +113,8 @@ ErrorCoeff coeff(int i){
 	return odp;
 }
 
-
-int main(){
-	bool err;
-	int in;
-	wiersz = 1;
-	kolumna = 1;
-	in = getchar();
-	while(in != EOF){
-		err = false;
-		/** @brief Wczytywanie współczynnika.
-		 * Jest później przekazywany do PolyFromCoeff();
-		 * */
-		 //F1
-		if(('0' <= i && i <= '9') || i == '-'){
-			ErrorCoeff res;
-			res = coeff(i);
-			if(i != '\0' && i != EOF){
-				res.err = true;
-				fprintf(stderr, "ERROR %ld %ld\n", wiersz, kolumna);
-				while(i != '\0' && i != EOF){
-						i = getchar();
-				}
-				wiersz++;
-				kolumna = 0;
-			}
-			else if(!res.err){
-				add(PolyFromCoeff(res.n);
-				wiersz++;
-				kolumna = 0;
-			}
-		}
-		//Koniec F1
-		/** @brief Parsowanie wielomianów.
-		 * */
-		//F2
-		else if(i == '('){
-			//TODO
-			}
-		//Koniec F2
-		/** @brief Przeprowadza 'ADD' lub 'AT x'.
-		 * Sprawdza najpierw pierwszą lietrę, jeżeli jest A, to znaczy, że komenda to 'ADD' lub 'AT x"
-		 * Następnie sprawdza drugą literę, wtedy ma pewnośc co do komendy
-		 * Później do końca sprawdza, czy format jest podany poprawnie
-		 * */
-		//F3
-		else if(i == 'A'){
-			i = getchar();
-			kolumna++;
-			/** @brief Sprzwdzanie poprawności ADD.
-			 * */
-			//F3.1
-			if(i == 'D'){
-				//TODO
-			}
-			//Koniec F3.1
-			/** @brief Sprawdzanie poprawności AT x.
-			 * */
-			// F3.2
-			else if(i == 'T'){
-				i = getchar();
-				kolumna++;
-				if(i != ' '){
-					err = true;
-					fprintf(stderr, "ERROR %ld WRONG COMMAND\N", wiersz);
-					while(i != '\0' && i != EOF){
-							i = getchar();
-						}
-					wiersz++;
-					kolumna = 0;
-				}
-				else {
-					long liczba, l10;
+ErrorLong readAt(int i){
+	long liczba, l10;
 					i = getchar();
 					if(('0' <= i && i <= '9') || i == '-'){
 						bool ujemna = false;
@@ -221,23 +165,48 @@ int main(){
 					}
 					//TODO
 				}
-			}
-			//Koniec F3.2
-			/** @brief Komunikat o błędzie.
-			 * jako, że nie jest ot komenda 'ADD' ani 'AT x', to program wyrzuca komunikat o błędzie
-			 * */
-			 //F3.3
-			else {
-				err = true;
-				fprintf(stderr, "ERROR %ld WRONG COMMAND\N", wiersz);
+}
+
+
+int main(){
+	bool err;
+	int in;
+	wiersz = 1;
+	kolumna = 1;
+	in = getchar();
+	while(in != EOF){
+		//err = false;
+		 //F1
+		if(('0' <= i && i <= '9') || i == '-'){
+			ErrorCoeff res;
+			res = coeff(i);
+			if(i != '\0' && i != EOF){
+				res.err = true;
+				fprintf(stderr, "ERROR %ld %ld\n", wiersz, kolumna);
 				while(i != '\0' && i != EOF){
 						i = getchar();
-					}
+				}
 				wiersz++;
 				kolumna = 0;
 			}
-			//Koniec F3.3
+			else if(!res.err){
+				add(PolyFromCoeff(res.n);
+				wiersz++;
+				kolumna = 0;
+			}
 		}
-		//Koniec F3
+		//Koniec F1
+		/** @brief Parsowanie wielomianów.
+		 * */
+		//F2
+		else if(i == '('){
+			//TODO
+		}
+		else {
+			ungetc(i, stdin);
+			char input[10];
+			scanf("%s", input);
+			//TODO
+		}
 	}
 }
