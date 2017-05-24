@@ -15,6 +15,8 @@
 
 Stack stos;
 
+long wiersz, kolumna;
+
 struct ErrorInt {
 	
 	bool err;
@@ -43,15 +45,64 @@ struct ErrorCoeff {
 	
 };
 
-ErrorCoeff coeff(){
-	
+ErrorCoeff coeff(int i){
+	ErrorCoeff odp;
+	odp.err = false;
+	odp.n = 0;
+	bool ujemna = false;
+	if(i == '-'){
+		ujemna = true;
+		i = getchar();
+		kolumna++;
+		if('0' <= i && i <= '9'){}
+		else {
+			odp.err = true;
+			fprintf(stderr, "ERROR %ld %ld\n", wiersz, kolumna);
+			while(i != '\0' && i != EOF){
+				i = getchar();
+			}
+			wiersz++;
+			kolumna = 0;
+			break;
+		}
+	}
+	poly_coeff_t liczba = i - '0';
+	poly_coeff_t l10;
+	for(i = getchar(); '0' <= i && i <= '9'; i = getchar()){
+		kolumna++;
+		if(ujemna && liczba > 0)
+			liczba *= -1;
+		l10 = liczba * 10;
+		if(l10 / 10 != liczba){
+			odp.err = true;
+			fprintf(stderr, "ERROR %ld %ld\n", wiersz, kolumna);
+			while(i != '\0' && i != EOF){
+				i = getchar();
+			}
+			wiersz++;
+			kolumna = 0;
+			break;
+		}
+		liczba = l10 + (i - '0');
+		if(liczba < l10){
+			odp.err = true;
+			fprintf(stderr, "ERROR %ld %ld\n", wiersz, kolumna);
+			while(i != '\0' && i != EOF){
+				i = getchar();
+			}
+			wiersz++;
+			kolumna = 0;
+			break;
+		}
+	}
+	odp.n = liczba;
+	return odp;
 }
 
 
 int main(){
 	bool err;
 	int in;
-	long wiersz, kolumna;
 	wiersz = 1;
 	kolumna = 1;
 	in = getchar();
@@ -62,64 +113,21 @@ int main(){
 		 * */
 		 //F1
 		if(('0' <= i && i <= '9') || i == '-'){
-			bool ujemna = false;
-			if(i == '-'){
-				ujemna = true;
-				i = getchar();
-				kolumna++;
-				if('0' <= i && i <= '9'){}
-				else {
-					err = true;
-					fprintf(stderr, "ERROR %ld %ld\n", wiersz, kolumna);
-					while(i != '\0' && i != EOF){
-						i = getchar();
-					}
-					wiersz++;
-					kolumna = 0;
-					break;
-				}
-			}
-			poly_coeff_t liczba = i - '0';
-			poly_coeff_t l10;
-			for(i = getchar(); '0' <= i && i <= '9'; i = getchar()){
-				kolumna++;
-				if(ujemna && liczba > 0)
-					liczba *= -1;
-				l10 = liczba * 10;
-				if(l10 / 10 != liczba){
-					err = true;
-					fprintf(stderr, "ERROR %ld %ld\n", wiersz, kolumna);
-					while(i != '\0' && i != EOF){
-						i = getchar();
-					}
-					wiersz++;
-					kolumna = 0;
-					break;
-				}
-				liczba = l10 + (i - '0');
-				if(liczba < l10){
-					err = true;
-					fprintf(stderr, "ERROR %ld %ld\n", wiersz, kolumna);
-					while(i != '\0' && i != EOF){
-						i = getchar();
-					}
-					wiersz++;
-					kolumna = 0;
-					break;
-				}
-			}
+			ErrorCoeff res;
+			res = coeff(i);
 			if(i != '\0' && i != EOF){
-				err = true;
+				res.err = true;
 				fprintf(stderr, "ERROR %ld %ld\n", wiersz, kolumna);
 				while(i != '\0' && i != EOF){
 						i = getchar();
-					}
+				}
 				wiersz++;
 				kolumna = 0;
 			}
-			else if(!err){
-				add(PolyFromCoeff(liczba);
+			else if(!res.err){
+				add(PolyFromCoeff(res.n);
 				wiersz++;
+				kolumna = 0;
 			}
 		}
 		//Koniec F1
