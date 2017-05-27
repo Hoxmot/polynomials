@@ -489,6 +489,7 @@ ErrorPoly polyParse(int i, bool wew){
 					else if(!em.zero){
 						if(z0){
 							mt->m = em.monos;
+							z0 = false;
 						}
 						else {
 							mt2 = malloc(sizeof(struct MonoTab));
@@ -540,10 +541,16 @@ ErrorPoly polyParse(int i, bool wew){
 			}
 		}
 		else if((!wew && (i == '\n' || i == EOF)) || (wew && i == ',')){
-			Mono monos[1];
-			monos[0] = em.monos;
-			ep.p = PolyAddMonos(1, monos);
-			return ep;
+			if(z0){
+				ep.p = PolyZero();
+				return ep;
+			}
+			else {
+				Mono monos[1];
+				monos[0] = em.monos;
+				ep.p = PolyAddMonos(1, monos);
+				return ep;
+			}
 		}
 		else {
 			ep.err = true;
@@ -962,7 +969,7 @@ int main(){
 				}
 			}
 			else {
-				fprintf(stderr, "ERROR %ld WRONG COMMAND string: %s\n", wiersz, input);
+				fprintf(stderr, "ERROR %ld WRONG COMMAND\n", wiersz);
 				while(i != '\n' && i != EOF){
 					i = getchar();
 				}
