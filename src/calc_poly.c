@@ -175,6 +175,7 @@ ErrorLong readAt(int i){
 ErrorUInt getIdx(int i){
 	ErrorUInt eui;
 	unsigned liczba, l10;
+	eui.err = false;
 	i = getchar();
 	kolumna++;
 	if('0' <= i && i <= '9'){
@@ -964,6 +965,13 @@ int main(){
 		i = getchar();
 		wiersz++;
 		kolumna = 1;
+	}
+	
+	while(!isEmpty()){
+		Error x = pop();
+		if(!x.czyBlad){
+			PolyDestroy(&x.odp);
+		}
 	}
 	
 	return 0;
