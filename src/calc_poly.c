@@ -356,6 +356,7 @@ ErrorPoly polyParse(int i, bool wew);
 ErrorMono monoParse(int i){
 	ErrorMono em;
 	em.err = false;
+	em.zero = false;
 	i = getchar();
 	kolumna++;
 	if(i == '('){
@@ -377,8 +378,14 @@ ErrorMono monoParse(int i){
 					return em;
 				}
 				else {
-					em.monos = MonoFromPoly(&ep.p, ee.n);
-					return em;
+					if(PolyIsZero(&ep.p)){
+						em.zero = true;
+						return em;
+					}
+					else {
+						em.monos = MonoFromPoly(&ep.p, ee.n);
+						return em;
+					}
 				}
 			}
 			else {
@@ -411,8 +418,14 @@ ErrorMono monoParse(int i){
 					return em;
 				}
 				else {
-					em.monos = MonoFromPoly(&coe, ee.n);
-					return em;
+					if(PolyIsZero(&coe)){
+						em.zero = true;
+						return em;
+					}
+					else {
+						em.monos = MonoFromPoly(&coe, ee.n);
+						return em;
+					}
 				}
 			}
 			else {
@@ -445,6 +458,7 @@ ErrorMono monoParse(int i){
 ErrorPoly polyParse(int i, bool wew){
 	ErrorPoly ep;
 	ErrorMono em;
+	bool z0 = true;
 	ep.err = false;
 	em = monoParse(i);
 	if(em.err){
@@ -452,6 +466,8 @@ ErrorPoly polyParse(int i, bool wew){
 		return ep;
 	}
 	else {
+		if(!em.zero)
+			z0 = false;
 		i = getchar();
 		kolumna++;
 		if(i == '+'){
@@ -459,7 +475,8 @@ ErrorPoly polyParse(int i, bool wew){
 			mt = malloc(sizeof(struct MonoTab));
 			mt->next = NULL;
 			mt->size = 1;
-			mt->m = em.monos;
+			if(!z0)
+				mt->m = em.monos;
 			while(i == '+'){
 				i = getchar();
 				kolumna++;
@@ -469,13 +486,19 @@ ErrorPoly polyParse(int i, bool wew){
 						ep.err = true;
 						return ep;
 					}
-					else {
-						mt2 = malloc(sizeof(struct MonoTab));
-						mt2->next = mt;
-						mt2->size = mt->size + 1;
-						mt2->m = em.monos;
-						mt = mt2;
-						mt2 = NULL;
+					else if(!em.zero){
+						if(z0){
+							mt->m = em.monos;
+						}
+						else {
+							mt2 = malloc(sizeof(struct MonoTab));
+							mt2->next = mt;
+							mt2->size = mt->size + 1;
+							mt2->m = em.monos;
+							mt = mt2;
+							mt2 = NULL;
+						}
+						z0 = false;
 					}
 				}
 				else {
@@ -490,16 +513,22 @@ ErrorPoly polyParse(int i, bool wew){
 				kolumna++;
 			}
 			if((!wew && (i == '\n' || i == EOF)) || (wew && i == ',')){
-				int len = mt->size;
-				Mono mon[len];
-				for(int k = 0; k < len; k++){
-					mon[k] = mt->m;
-					mt2 = mt;
-					mt = mt->next;
-					free(mt2);
+				if(z0){
+					ep.p = PolyZero();
+					return ep;
 				}
-				ep.p = PolyAddMonos(len, mon);
-				return ep;
+				else {
+					int len = mt->size;
+					Mono mon[len];
+					for(int k = 0; k < len; k++){
+						mon[k] = mt->m;
+						mt2 = mt;
+						mt = mt->next;
+						free(mt2);
+					}
+					ep.p = PolyAddMonos(len, mon);
+					return ep;
+				}
 			}
 			else {
 				ep.err = true;
@@ -755,6 +784,8 @@ int main(){
 					else {
 						bool x;
 						Poly p1, p2;
+						p1 = e1.odp;
+						p2 = e2.odp;
 						x = PolyIsEq(&p1, &p2);
 						printf("%d\n", x);
 					}
