@@ -140,6 +140,7 @@ Error pop(){
 	Error res;
 	res.czyBlad = false;
 	res.odp = e->var;
+	free(e);
 	return res;
 }
 
