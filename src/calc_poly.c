@@ -337,10 +337,8 @@ ErrorExp getExp(int i){
 		return odp;
 	}
 	else {
-		//fprintf(stderr, "exp liczba %d\n", liczba);
 		odp.n = 0;
 		odp.n = liczba;
-		//fprintf(stderr, "exp przed wyjsciem %d\n", odp.n);
 		return odp;
 	}
 }
@@ -367,7 +365,6 @@ ErrorMono monoParse(int i){
 			return em;
 		}
 		else {
-			//fprintf(stderr, "%c\n", i);
 			i = getchar();
 			kolumna++;
 			if('0' <= i && i <= '9'){
@@ -412,7 +409,6 @@ ErrorMono monoParse(int i){
 			if('0' <= i && i <= '9'){
 				ErrorExp ee;
 				ee = getExp(i);
-				//printf("exp po wyjsciu %d\n", ee.n);
 				if(ee.err){
 					em.err = true;
 					return em;
@@ -610,8 +606,6 @@ int main(){
 			}
 			//else został obsłużony przez coeff();
 		}
-		/** @brief Parsowanie wielomianów.
-		 * */
 		else if(i == '('){
 			ErrorPoly ep;
 			ep = polyParse(i, false);
@@ -625,7 +619,6 @@ int main(){
 			char input[10];
 			scanf("%s", input);
 			if(strcmp(input, "ADD") == 0){
-				//fprintf(stderr, "ADD %ld %s\n", wiersz, input); //DELETE
 				i = getchar();
 				if(i == '\n' || i == EOF){
 					Error e1, e2;
@@ -656,7 +649,6 @@ int main(){
 				}
 			}
 			else if(strcmp(input, "AT") == 0){
-				//fprintf(stderr, "AT %ld %s.\n", wiersz, input); //DELETE
 				i = getchar();
 				kolumna++;
 				if(i != ' '){
@@ -685,7 +677,6 @@ int main(){
 				}
 			}
 			else if (strcmp(input, "CLONE") == 0){
-				//fprintf(stderr, "CLONE %ld\n", wiersz); //DELETE
 				i = getchar();
 				if(i == '\n' || i == EOF){
 					Error e;
@@ -708,7 +699,6 @@ int main(){
 				}
 			}
 			else if(strcmp(input, "DEG") == 0){
-				//fprintf(stderr, "DEG %ld\n", wiersz); //DELETE
 				i = getchar();
 				if(i == '\n' || i == EOF){
 					Error e;
@@ -731,7 +721,6 @@ int main(){
 				}
 			}
 			else if(strcmp(input, "DEG_BY") == 0){
-				//fprintf(stderr, "DEG_BY %ld\n", wiersz); //DELETE
 				i = getchar();
 				if(i == ' '){
 					ErrorUInt eui;
@@ -758,7 +747,6 @@ int main(){
 				}
 			}
 			else if(strcmp(input, "IS_COEFF") == 0){
-				//fprintf(stderr, "IS_COEFF %ld\n", wiersz); //DELETE
 				i = getchar();
 				if(i == '\n' || i == EOF){
 					Error e;
@@ -779,7 +767,6 @@ int main(){
 				}
 			}
 			else if(strcmp(input, "IS_EQ") == 0){
-				//fprintf(stderr, "IS_EQ %ld\n", wiersz); //DELETE
 				i = getchar();
 				if(i == '\n' || i == EOF){
 					Error e1, e2;
@@ -805,7 +792,6 @@ int main(){
 				}
 			}
 			else if(strcmp(input, "IS_ZERO") == 0){
-				//fprintf(stderr, "IS_ZERO %ld\n", wiersz); //DELETE
 				i = getchar();
 				if(i == '\n' || i == EOF){
 					Error e;
@@ -826,7 +812,6 @@ int main(){
 				}
 			}
 			else if(strcmp(input, "MUL") == 0){
-				//fprintf(stderr, "MUL %ld\n", wiersz); //DELETE
 				i = getchar();
 				if(i == '\n' || i == EOF){
 					Error e1, e2;
@@ -857,7 +842,6 @@ int main(){
 				}
 			}
 			else if(strcmp(input, "NEG") == 0){
-				//fprintf(stderr, "NEG %ld\n", wiersz); //DELETE
 				i = getchar();
 				if(i == '\n' || i == EOF){
 					Error e1;
@@ -881,7 +865,6 @@ int main(){
 				}
 			}
 			else if(strcmp(input, "POP") == 0){
-				//fprintf(stderr, "POP %ld\n", wiersz); //DELETE
 				i = getchar();
 				if(i == '\n' || i == EOF){
 					Error e;
@@ -902,7 +885,6 @@ int main(){
 				}
 			}
 			else if(strcmp(input, "PRINT") == 0){
-				//fprintf(stderr, "PRINT %ld\n", wiersz); //DELETE
 				i = getchar();
 				kolumna++;
 				if(i == '\n' || i == EOF){
@@ -924,7 +906,6 @@ int main(){
 				}
 			}
 			else if(strcmp(input, "SUB") == 0){
-				//fprintf(stderr, "SUB %ld\n", wiersz); //DELETE
 				i = getchar();
 				if(i == '\n' || i == EOF){
 					Error e1, e2;
@@ -955,7 +936,6 @@ int main(){
 				}
 			}
 			else if(strcmp(input, "ZERO") == 0){
-				//fprintf(stderr, "ZERO %ld\n", wiersz); //DELETE
 				i = getchar();
 				if(i == '\n' || i == EOF){
 					Poly z = PolyZero();
