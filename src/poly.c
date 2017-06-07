@@ -442,22 +442,19 @@ Poly PolyAt(const Poly *p, poly_coeff_t x)
  * @param[in] p2 : podstawa
  * @return początkowe p2^pow
  * */
-Poly PolyPow(poly_exp_t pow, Poly p1, Poly p2){
+Poly PolyPow(poly_exp_t pow, Poly p1, Poly p2, bool inner){
 	if(pow == 0){
 		return p1;
-		//return PolyClone(&p1);
 	}
 	else {
-		//return PolyPow(pow / 2, pow % 2 == 0 ? p1 : PolyMul(&p1, &p2), PolyMul(&p2, &p2));
-		
 		Poly np1, np2;
 		if(pow % 2 == 0){
 			np1 = PolyClone(&p1);
-			//PolyDestroy(&p1);
+			PolyDestroy(&p1);
 		}
 		else {
 			np1 = PolyMul(&p1, &p2);
-			//PolyDestroy(&p1);
+			PolyDestroy(&p1);
 		}
 		
 		if(pow / 2 > 0){
@@ -466,39 +463,14 @@ Poly PolyPow(poly_exp_t pow, Poly p1, Poly p2){
 		else {
 			np2 = p2;
 		}
-		
-		//np2 = PolyMul(&p2, &p2);
-		Poly odp = PolyPow(pow / 2, np1, np2);
-		PolyDestroy(&p2);
-		//PolyDestroy(&np1);
-		//PolyDestroy(&np2);
-		return odp;
-		
-	}
-}
-
-//TODO
-/*
-Poly PolyReduce(Poly p){
-	if(PolyIsCoeff(&p)){
-		return p;
-	}
-	else {
-		unsigned s = 0;
-		Mono x[PolyLen(&p)];
-		for(unsigned i = 0; i < PolyLen(&p); i++){
-			Poly np = PolyReduce(p.arr[i].p);
-			PolyDestroy(&p.arr[i].p);
-			if(!PolyIsZero(&np)){
-				x[s] = MonoFromPoly(&np, p.arr[i].exp);
-				s++;
-			}
+		Poly odp = PolyPow(pow / 2, np1, np2, true);
+		if(inner){
+			PolyDestroy(&p2);
 		}
-		Poly odp = PolyAddMonos(s, x);
 		return odp;
+		
 	}
 }
-* */
 
 /** @brief Przyjmuje zadanie PolyCompose.
  * Rekurencyjnie aplikuje kolejne funkcje do funkcji wyjściowej.
@@ -524,62 +496,35 @@ Poly PolyRecCompose(const Poly *p, unsigned n, unsigned count, const Poly x[]){
 			return PolyRecCompose(&curr, n + 1, count, x);
 		}
 		else {
-			//Poly *wskCurr, np, pp
 			Poly prev, sp;
 			Mono m1;
-			//Mono mp;
 			for(unsigned i = 0; i < PolyLen(p); i++){
 				m1 = p->arr[i];
 				sp = PolyRecCompose(&m1.p, n + 1, count, x);
 				if(PolyIsZero(&sp)){
 					curr = PolyZero();
-					//sp = PolyDestroy(&sp);
 				}
 				else {
-					curr = PolyPow(m1.exp, PolyFromCoeff(1), x[n]);
-					//PolyDestroy(&x[n]);
-					/*
-					printf("Curr: ");
-					polyPrint1(curr);
-					printf("\n");
-					*/
+					curr = PolyPow(m1.exp, PolyFromCoeff(1), x[n], false);
 					if(PolyIsCoeff(&curr)){
 						curr = PolyAt(&sp, curr.coeff);
 					}
 					else {
-						curr = PolyMul(&curr, &sp);
+						tmp = PolyMul(&curr, &sp);
+						PolyDestroy(&curr);
+						PolyDestroy(&sp);
+						curr = tmp;
 					}
 				}
-				/*
-				Poly nPrev, nCurr;
-				if(i > 0){
-					nPrev = PolyReduce(prev);
-					PolyDestroy(&prev);
-					prev = nPrev;
-				}
-				nCurr = PolyReduce(curr);
-				PolyDestroy(&curr);
-				curr = nCurr;
-				*/
 				if(i > 0){
 					if(PolyIsZero(&prev)){
 						prev = curr;
 					}
 					else if(!PolyIsZero(&curr)){
-						/*
-						printf("Prev: ");
-						polyPrint1(prev);
-						printf(" curr ");
-						polyPrint1(curr);
-						printf("\n");
-						*/
-						prev = PolyAdd(&prev, &curr);
-						/*
 						tmp = PolyAdd(&prev, &curr);
 						PolyDestroy(&prev);
 						PolyDestroy(&curr);
 						prev = tmp;
-						* */
 					}
 				}
 				else {

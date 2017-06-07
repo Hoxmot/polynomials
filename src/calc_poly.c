@@ -793,11 +793,11 @@ int main(){
 							}
 							if(!underflow){
 								Poly odp = PolyCompose(&p, count, x);
-								/*
+								
 								for(unsigned i = 0; i < count; i++){
 									PolyDestroy(&x[i]);
 								}
-								*/
+								
 								PolyDestroy(&p);
 								add(odp);
 							} // else nie robi nic
