@@ -453,21 +453,21 @@ Poly PolyPow(poly_exp_t pow, Poly p1, Poly p2){
 		Poly np1, np2;
 		if(pow % 2 == 0){
 			np1 = PolyClone(&p1);
-			PolyDestroy(&p1);
+			//PolyDestroy(&p1);
 		}
 		else {
 			np1 = PolyMul(&p1, &p2);
-			PolyDestroy(&p1);
+			//PolyDestroy(&p1);
 		}
-		/*
+		
 		if(pow / 2 > 0){
 			np2 = PolyMul(&p2, &p2);
 		}
 		else {
 			np2 = p2;
 		}
-		*/
-		np2 = PolyMul(&p2, &p2);
+		
+		//np2 = PolyMul(&p2, &p2);
 		Poly odp = PolyPow(pow / 2, np1, np2);
 		PolyDestroy(&p2);
 		//PolyDestroy(&np1);
@@ -537,33 +537,17 @@ Poly PolyRecCompose(const Poly *p, unsigned n, unsigned count, const Poly x[]){
 				}
 				else {
 					curr = PolyPow(m1.exp, PolyFromCoeff(1), x[n]);
+					//PolyDestroy(&x[n]);
+					/*
 					printf("Curr: ");
 					polyPrint1(curr);
 					printf("\n");
+					*/
 					if(PolyIsCoeff(&curr)){
 						curr = PolyAt(&sp, curr.coeff);
-						//Nie wiem, czy będzie działało w każdym przypadku
-						//Mono *a = calloc(1, sizeof(struct Mono));
-						//a[0] = MonoFromPoly(&sp, 0);
-						//curr = PolyAddMonos(1, a);
 					}
 					else {
-						// curr = PolyMul(&curr, &sp);
-						/*
-						tmp = PolyMul(&curr, &sp);
-						PolyDestroy(&curr);
-						PolyDestroy(&sp);
-						curr = tmp;
-						*/
-						/*
-						wskCurr = &curr;
-						for(unsigned k = 0; k < PolyLen(wskCurr); k++){
-							mp = wskCurr->arr[k];
-							pp = mp.p;
-							np = PolyMul(&pp, &sp);
-							wskCurr->arr[k].p = np;
-						}
-						*/
+						curr = PolyMul(&curr, &sp);
 					}
 				}
 				/*
