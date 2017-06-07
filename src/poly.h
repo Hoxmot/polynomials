@@ -1,9 +1,9 @@
 /** @file
    Interfejs klasy wielomianów
 
-   @author Jakub Pawlewicz <pan@mimuw.edu.pl>
+   @author Jakub Pawlewicz <pan@mimuw.edu.pl>, Kamil Bladoszewski <kb392558@students.mimuw.edu.pl>
    @copyright Uniwersytet Warszawski
-   @date 2017-03-04
+   @date 2017-03-04, 2017-06-01
 */
 
 #ifndef __POLY_H__
@@ -219,5 +219,9 @@ bool PolyIsEq(const Poly *p, const Poly *q);
  * @return @f$p(x, x_0, x_1, \ldots)@f$
  */
 Poly PolyAt(const Poly *p, poly_coeff_t x);
+
+/** @brief 
+ * */
+Poly PolyCompose(const Poly *p, unsigned count, const Poly x[]);
 
 #endif /* __POLY_H__ */

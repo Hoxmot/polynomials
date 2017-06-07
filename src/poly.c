@@ -6,7 +6,9 @@
    @date 2017-03-04
 */
 
+#include "print.h"
 #include "poly.h"
+//#include "print.h"
 #include <assert.h>
 #include <limits.h>
 #include <stdlib.h>
@@ -163,6 +165,10 @@ static Poly PolyAddPolyPoly(const Poly *p, const Poly *q)
         poly_exp_t qe = j < PolyLen(q) ? q->arr[j].exp : POLY_EXP_MAX;
         if (pe < qe)
         {
+			if(PolyIsZero(&p->arr[i].p)){
+				polyPrint1(p->arr[i].p);
+				printf("\n");
+			}
             assert(!PolyIsZero(&p->arr[i].p));
             r.arr[k++] = MonoClone(&p->arr[i++]);
         }
@@ -427,4 +433,180 @@ Poly PolyAt(const Poly *p, poly_coeff_t x)
         r = q;
     }
     return r;
+}
+
+/** @breif Fukcja pomocnicza do podnoszenia wielomianu do potęgi.
+ * Podnosi wielomian do potęgi pow
+ * @param[in] pow : wykładnik
+ * @param[in] p1 : mnożnik
+ * @param[in] p2 : podstawa
+ * @return początkowe p2^pow
+ * */
+Poly PolyPow(poly_exp_t pow, Poly p1, Poly p2){
+	if(pow == 0){
+		return p1;
+		//return PolyClone(&p1);
+	}
+	else {
+		//return PolyPow(pow / 2, pow % 2 == 0 ? p1 : PolyMul(&p1, &p2), PolyMul(&p2, &p2));
+		
+		Poly np1, np2;
+		if(pow % 2 == 0){
+			np1 = PolyClone(&p1);
+			PolyDestroy(&p1);
+		}
+		else {
+			np1 = PolyMul(&p1, &p2);
+			PolyDestroy(&p1);
+		}
+		/*
+		if(pow / 2 > 0){
+			np2 = PolyMul(&p2, &p2);
+		}
+		else {
+			np2 = p2;
+		}
+		*/
+		np2 = PolyMul(&p2, &p2);
+		Poly odp = PolyPow(pow / 2, np1, np2);
+		PolyDestroy(&p2);
+		//PolyDestroy(&np1);
+		//PolyDestroy(&np2);
+		return odp;
+		
+	}
+}
+
+//TODO
+/*
+Poly PolyReduce(Poly p){
+	if(PolyIsCoeff(&p)){
+		return p;
+	}
+	else {
+		unsigned s = 0;
+		Mono x[PolyLen(&p)];
+		for(unsigned i = 0; i < PolyLen(&p); i++){
+			Poly np = PolyReduce(p.arr[i].p);
+			PolyDestroy(&p.arr[i].p);
+			if(!PolyIsZero(&np)){
+				x[s] = MonoFromPoly(&np, p.arr[i].exp);
+				s++;
+			}
+		}
+		Poly odp = PolyAddMonos(s, x);
+		return odp;
+	}
+}
+* */
+
+/** @brief Przyjmuje zadanie PolyCompose.
+ * Rekurencyjnie aplikuje kolejne funkcje do funkcji wyjściowej.
+ * @param[in] p : odpowiednie zagłębienie funkcji wyjściowej
+ * @param[in] n : obecna głębokość rekurencji
+ * @param[in] count : długość tablicy x
+ * @param[in] x : tablica wielomianów, które będziemy podstawiać pod poszczególne zmienne
+ * @return wielomian p z podstawionym x[n] pod zmienną n
+ * */
+Poly PolyRecCompose(const Poly *p, unsigned n, unsigned count, const Poly x[]){
+	if(PolyIsCoeff(p) || PolyIsZero(p)){
+		Poly odp = PolyClone(p);
+		return odp;
+	}
+	else {
+		Poly curr, tmp;
+		if(n >= count){
+			curr = PolyAt(p, 0);
+			return PolyRecCompose(&curr, n + 1, count, x);
+		}
+		else if(PolyIsCoeff(&x[n])){
+			curr = PolyAt(p, x[n].coeff);
+			return PolyRecCompose(&curr, n + 1, count, x);
+		}
+		else {
+			//Poly *wskCurr, np, pp
+			Poly prev, sp;
+			Mono m1;
+			//Mono mp;
+			for(unsigned i = 0; i < PolyLen(p); i++){
+				m1 = p->arr[i];
+				sp = PolyRecCompose(&m1.p, n + 1, count, x);
+				if(PolyIsZero(&sp)){
+					curr = PolyZero();
+					//sp = PolyDestroy(&sp);
+				}
+				else {
+					curr = PolyPow(m1.exp, PolyFromCoeff(1), x[n]);
+					printf("Curr: ");
+					polyPrint1(curr);
+					printf("\n");
+					if(PolyIsCoeff(&curr)){
+						curr = PolyAt(&sp, curr.coeff);
+						//Nie wiem, czy będzie działało w każdym przypadku
+						//Mono *a = calloc(1, sizeof(struct Mono));
+						//a[0] = MonoFromPoly(&sp, 0);
+						//curr = PolyAddMonos(1, a);
+					}
+					else {
+						// curr = PolyMul(&curr, &sp);
+						/*
+						tmp = PolyMul(&curr, &sp);
+						PolyDestroy(&curr);
+						PolyDestroy(&sp);
+						curr = tmp;
+						*/
+						/*
+						wskCurr = &curr;
+						for(unsigned k = 0; k < PolyLen(wskCurr); k++){
+							mp = wskCurr->arr[k];
+							pp = mp.p;
+							np = PolyMul(&pp, &sp);
+							wskCurr->arr[k].p = np;
+						}
+						*/
+					}
+				}
+				/*
+				Poly nPrev, nCurr;
+				if(i > 0){
+					nPrev = PolyReduce(prev);
+					PolyDestroy(&prev);
+					prev = nPrev;
+				}
+				nCurr = PolyReduce(curr);
+				PolyDestroy(&curr);
+				curr = nCurr;
+				*/
+				if(i > 0){
+					if(PolyIsZero(&prev)){
+						prev = curr;
+					}
+					else if(!PolyIsZero(&curr)){
+						/*
+						printf("Prev: ");
+						polyPrint1(prev);
+						printf(" curr ");
+						polyPrint1(curr);
+						printf("\n");
+						*/
+						prev = PolyAdd(&prev, &curr);
+						/*
+						tmp = PolyAdd(&prev, &curr);
+						PolyDestroy(&prev);
+						PolyDestroy(&curr);
+						prev = tmp;
+						* */
+					}
+				}
+				else {
+					prev = curr;
+				}
+			}
+			return prev;
+		}
+	}
+}
+
+Poly PolyCompose(const Poly *p, unsigned count, const Poly x[]){
+	return PolyRecCompose(p, 0, count, x);
 }

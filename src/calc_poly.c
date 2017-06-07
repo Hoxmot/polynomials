@@ -227,6 +227,66 @@ ErrorUInt getIdx(int i){
 	}
 }
 
+/** @brief Funkcja wczytująca liczbę zmiennych do PolyCompose().
+ * Wczytuje liczbę unsigned int
+ * @param[in] i : spacja tuż po DEG_BY
+ * @return index
+ * */
+ErrorUInt getCount(int i){
+	ErrorUInt eui;
+	unsigned liczba, l10;
+	eui.err = false;
+	i = getchar();
+	kolumna++;
+	if('0' <= i && i <= '9'){
+		liczba = i - '0';
+		for(i = getchar(); '0' <= i && i <= '9'; i = getchar()){
+			kolumna++;
+			l10 = liczba * 10;
+			if(l10 / 10 != liczba){
+				eui.err = true;
+				fprintf(stderr, "ERROR %ld WRONG COUNT\n", wiersz);
+				while(i != '\n' && i != EOF){
+					i = getchar();
+				}
+				return eui;
+			}
+			else {
+				liczba = l10 + (i - '0');
+				if(liczba < l10){
+					eui.err = true;
+					fprintf(stderr, "ERROR %ld WRONG COUNT\n", wiersz);
+					while(i != '\n' && i != EOF){
+						i = getchar();
+					}
+					return eui;
+				}
+			}
+		}
+		kolumna++;
+		if(i != '\n' && i != EOF){
+			eui.err = true;
+			fprintf(stderr, "ERROR %ld WRONG COUNT\n", wiersz);
+			while(i != '\n' && i != EOF){
+				i = getchar();
+			}
+			return eui;
+		}
+		else {
+			eui.n = liczba;
+			return eui;
+		}
+	}
+	else {
+		eui.err = true;
+		fprintf(stderr, "ERROR %ld WRONG COUNT\n", wiersz);
+		while(i != '\n' && i != EOF){
+			i = getchar();
+		}
+		return eui;
+	}
+}
+
 /** @brief Wczytywanie współczynnika.
  * Jest później przekazywany do PolyFromCoeff();
  * Używane w trakcie korzystania z funkcji polyParse()
@@ -617,8 +677,9 @@ int main(){
 		}
 		else if(('A' <= i && i <= 'Z') || ('a' <= i && i <= 'z')){
 			ungetc(i, stdin);
-			char input[10];
+			char input[15];
 			scanf("%s", input);
+			//printf("%s.\n", input);
 			if(strcmp(input, "ADD") == 0){
 				i = getchar();
 				if(i == '\n' || i == EOF){
@@ -691,6 +752,57 @@ int main(){
 						Poly res = PolyClone(&p);
 						add(res);
 					}
+				}
+				else {
+					fprintf(stderr, "ERROR %ld WRONG COMMAND\n", wiersz);
+					while(i != '\n' && i != EOF){
+						i = getchar();
+					}
+				}
+			}
+			else if(strcmp(input, "COMPOSE") == 0){
+				i = getchar();
+				if(i == ' '){
+					ErrorUInt eui;
+					eui = getCount(i);
+					if(!eui.err){
+						unsigned count = eui.n;
+						Error e;
+						e = pop();
+						if(e.czyBlad){
+							fprintf(stderr, "ERROR %ld STACK UNDERFLOW\n", wiersz);
+						}
+						else {
+							bool underflow = false;
+							Poly p = e.odp;
+							Poly x[count];
+							for(unsigned i = 0; i < count && !underflow; i++){
+								Error e1;
+								e1 = pop();
+								if(e1.czyBlad){
+									fprintf(stderr, "ERROR %ld STACK UNDERFLOW\n", wiersz);
+									underflow = true;
+									for(int k = i - 1; k >= 0; k--){
+										add(x[k]);
+									}
+									add(p);
+								}
+								else {
+									x[i] = e1.odp;
+								}
+							}
+							if(!underflow){
+								Poly odp = PolyCompose(&p, count, x);
+								/*
+								for(unsigned i = 0; i < count; i++){
+									PolyDestroy(&x[i]);
+								}
+								*/
+								PolyDestroy(&p);
+								add(odp);
+							} // else nie robi nic
+						}
+					} //else został obsłużony przez getIdx()
 				}
 				else {
 					fprintf(stderr, "ERROR %ld WRONG COMMAND\n", wiersz);
