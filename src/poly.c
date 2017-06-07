@@ -6,9 +6,7 @@
    @date 2017-03-04
 */
 
-#include "print.h"
 #include "poly.h"
-//#include "print.h"
 #include <assert.h>
 #include <limits.h>
 #include <stdlib.h>
@@ -165,10 +163,12 @@ static Poly PolyAddPolyPoly(const Poly *p, const Poly *q)
         poly_exp_t qe = j < PolyLen(q) ? q->arr[j].exp : POLY_EXP_MAX;
         if (pe < qe)
         {
+			/*
 			if(PolyIsZero(&p->arr[i].p)){
 				polyPrint1(p->arr[i].p);
 				printf("\n");
 			}
+			* */
             assert(!PolyIsZero(&p->arr[i].p));
             r.arr[k++] = MonoClone(&p->arr[i++]);
         }
