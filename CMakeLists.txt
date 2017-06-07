@@ -13,11 +13,19 @@ set_property(GLOBAL PROPERTY RULE_MESSAGES OFF)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # Ustawiamy wspólne opcje kompilowania dla wszystkich wariantów projektu.
-set(CMAKE_C_FLAGS "-std=c11 -Wall -Wextra")
+set(CMAKE_C_FLAGS "-std=c11 -Wall -Wextra -pedantic")
 # Domyślne opcje dla wariantów Release i Debug są sensowne.
 # Jeśli to konieczne, ustawiamy tu inne.
 # set(CMAKE_C_FLAGS_RELEASE "-O3 -DNDEBUG")
 # set(CMAKE_C_FLAGS_DEBUG "-g")
+
+find_library(CMOCKA cmocka)
+
+if (NOT CMOCKA)
+    message(FATAL_ERROR "Could not find cmocka.")
+endif ()
+
+enable_testing()
 
 # Wskazujemy pliki źródłowe.
 set(SOURCE_FILES
@@ -28,8 +36,23 @@ set(SOURCE_FILES
     src/calc_poly.c
 )
 
+#set(TEST_FILES
+#	src/utils.h
+#	src/calc_poly_test.c
+#)
+
 # Wskazujemy plik wykonywalny.
 add_executable(calc_poly ${SOURCE_FILES})
+
+add_executable(calc_poly_test src/calc_poly.c src/utils.h ${SOURCE_FILES})
+
+set_target_properties(
+    calc_poly_test
+    PROPERTIES
+    COMPILE_DEFINITIONS UNIT_TESTING=1)
+
+target_link_libraries(calc_poly_test ${CMOCKA})
+add_test(calc_poly_test ${CMAKE_CURRENT_BINARY_DIR}/calc_poly_test)
 
 # Dodajemy obsługę Doxygena: sprawdzamy, czy jest zainstalowany i jeśli tak to:
 find_package(Doxygen)
