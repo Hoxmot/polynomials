@@ -1,0 +1,352 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"exe",
+				"exercise2"
+			],
+			[
+				"exer",
+				"exercise1"
+			],
+			[
+				"co",
+				"correct"
+			],
+			[
+				"this",
+				"This"
+			],
+			[
+				"no",
+				"no"
+			],
+			[
+				"histogram-",
+				"histogram-marathoners-continue"
+			],
+			[
+				"td",
+				"td\tTag"
+			],
+			[
+				"hit",
+				"histograms"
+			],
+			[
+				"i",
+				"img\tTag"
+			],
+			[
+				"squ",
+				"square-root-choice"
+			],
+			[
+				"m",
+				"math"
+			],
+			[
+				"text-a",
+				"text-align"
+			],
+			[
+				"wo",
+				"word-break"
+			],
+			[
+				"rea",
+				"read-histogram"
+			],
+			[
+				"o",
+				"ol\tTag"
+			],
+			[
+				"def",
+				"definition"
+			],
+			[
+				"an",
+				"answer"
+			],
+			[
+				"histo",
+				"histograms"
+			],
+			[
+				"fi",
+				"fileName"
+			],
+			[
+				"re",
+				"removeFollowSign"
+			],
+			[
+				"table",
+				"tableName"
+			],
+			[
+				"spl",
+				"splitTableName"
+			],
+			[
+				"l",
+				"ls"
+			],
+			[
+				"read",
+				"readRow"
+			],
+			[
+				"w",
+				"write"
+			],
+			[
+				"max",
+				"max-width"
+			],
+			[
+				"mi",
+				"middle"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/hoxmot/Documents/IPP/Wielomiany/IPP-kb392558"
+	],
+	"file_history":
+	[
+		"/home/hoxmot/Documents/Vertabelo/OldStuff/Stata/misc/template.md",
+		"/home/hoxmot/Documents/Vertabelo/sql-academy-courses/descriptive-statistics/07-test.md",
+		"/home/hoxmot/Documents/Vertabelo/sql-academy-courses/descriptive-statistics/02-histograms.md",
+		"/home/hoxmot/Documents/Vertabelo/sql-academy-courses/descriptive-statistics/01-introduction.md",
+		"/home/hoxmot/Documents/Vertabelo/tools/csv_to_html/mk_table.py",
+		"/home/hoxmot/Documents/Vertabelo/OldStuff/Stata/misc/Marathoner.html",
+		"/home/hoxmot/Documents/Vertabelo/OldStuff/Stata/misc/Internet_Websites.html",
+		"/home/hoxmot/Documents/Vertabelo/sql-academy-courses/common-table-expressions/course.md",
+		"/home/hoxmot/Documents/Vertabelo/sql-academy-courses/common-table-expressions/06-final-quiz.md",
+		"/home/hoxmot/Documents/Vertabelo/sql-academy-courses/common-table-expressions/05-cte-data-modification.md",
+		"/home/hoxmot/Documents/Vertabelo/sql-academy-courses/common-table-expressions/04-recursive-cte.md",
+		"/home/hoxmot/Documents/Vertabelo/sql-academy-courses/common-table-expressions/03-nested-cte.md",
+		"/home/hoxmot/Documents/Vertabelo/sql-academy-courses/common-table-expressions/02-syntax.md",
+		"/home/hoxmot/Documents/Vertabelo/sql-academy-courses/common-table-expressions/01-intro-quiz.md",
+		"/home/hoxmot/Documents/Vertabelo/sql-academy-courses/common-table-expressions/04-recursive-cte/data/Department.sql",
+		"/home/hoxmot/Documents/Vertabelo/sql-academy-courses/common-table-expressions/04-recursive-cte/data/Employee.sql",
+		"/home/hoxmot/Documents/Vertabelo/sql-academy-courses/common-table-expressions/01-intro-quiz/data/Part1.sql"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"introduction",
+			"SYMMETRIC",
+			"introduction",
+			"align=\"middle\"",
+			"align",
+			"introduction",
+			"td",
+			"pre",
+			"introduction",
+			"informational",
+			"fileName",
+			"FileName",
+			"fileName",
+			"FileName",
+			"fileName",
+			"exercise 1",
+			"nested",
+			"exercise 2",
+			"trees",
+			"hierarchical com",
+			"trees in",
+			"recursion ex",
+			"re",
+			"img",
+			"p",
+			"%\">%</",
+			">%<",
+			"max-width: 100",
+			"style=\"width:100%\"",
+			"<p><img",
+			"img src",
+			"img",
+			"<p><img",
+			"img",
+			"p><img",
+			"p><i",
+			"img",
+			"\"><img",
+			"><i",
+			"c2",
+			"c1",
+			"complex r",
+			"complex",
+			"type: c",
+			"ctes with",
+			"recursion e",
+			"TODO",
+			"ctes-com",
+			"tag",
+			"ctes-co",
+			"cook_minutes",
+			"in each",
+			"minut",
+			"cook_minutes",
+			"minutes"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.unsaved_changes":
+	{
+		"height": 100.0
+	},
+	"pinned_build_system": "",
+	"project": "Wielomiany.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
