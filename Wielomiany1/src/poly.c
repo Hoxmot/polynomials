@@ -410,11 +410,11 @@ Poly PolyMulCoeff(const Poly *p, poly_coeff_t x){
  * @return `p * q`
  */
 Poly PolyMul(const Poly *p, const Poly *q){
-	if(PolyIsZero(p) == true || PolyIsZero(q) == true)
+	if(PolyIsZero(p) || PolyIsZero(q))
 		return PolyZero();
-	if(PolyIsCoeff(p) == true)
+	if(PolyIsCoeff(p))
 		return PolyMulCoeff(q, p->val);
-	if(PolyIsCoeff(q) == true)
+	if(PolyIsCoeff(q))
 		return PolyMulCoeff(p, q->val);
 	unsigned a = 0;
 	unsigned b = 0;
