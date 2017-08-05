@@ -22,26 +22,26 @@ typedef int poly_exp_t;
  * @param[in] c : wartość współczynnika
  * @return wielomian
  */
- Poly PolyFromCoeff(poly_coeff_t c)
-{
-    Poly *a;
-    a = malloc(sizeof(struct Poly));
-    a->first = NULL;
-    a->val = c;
-    return *a;
+ Poly PolyFromCoeff(poly_coeff_t c){
+
+    Poly a;
+    a.first = NULL;
+    a.val = c;
+    return a;
+
 }
 
 /**
  * @brief Tworzy wielomian tożsamościowo równy zeru.
  * @return wielomian
  */
-Poly PolyZero()
-{
-    Poly *a;
-    a = malloc(sizeof(struct Poly));
-    a->first = NULL;
-    a->val = 0;
-    return *a;
+Poly PolyZero(){
+
+    Poly a;
+    a.first = NULL;
+    a.val = 0;
+    return a;
+
 }
 
 /**
@@ -51,9 +51,10 @@ Poly PolyZero()
  * @param[in] e : wykładnik
  * @return jednomian `p * x^e`
  */
-Mono MonoFromPoly(const Poly *p, poly_exp_t e)
-{
-    return (Mono) {.p = p, .exp = e, .next = NULL};
+Mono MonoFromPoly(const Poly *p, poly_exp_t e){
+
+    return (Mono) {.p = *p, .exp = e, .next = NULL};
+
 }
 
 /**
@@ -73,13 +74,15 @@ bool PolyIsCoeff(const Poly *p)
  * @param[in] p : wielomian
  * @return Czy wielomian jest równy zero?
  */
-bool PolyIsZero(const Poly *p)
-{
+bool PolyIsZero(const Poly *p){
+
     if(p->first == NULL){
 		if(p->val == 0)
 			return true;
 		else return false;
 	}
+	//TODO
+	/*
 	else {
 		Mono *m;
 		m = p->first;
@@ -94,7 +97,9 @@ bool PolyIsZero(const Poly *p)
 			else return false;
 		}
 	}
+	*/
 	return false;
+
 }
 
 void MonoDestroy(Mono *m);
@@ -104,13 +109,12 @@ void MonoDestroy(Mono *m);
  * @param[in] p : wielomian
  */
 void PolyDestroy(Poly *p){
-	Mono *m;
-	m = p->first;
-	if(m != NULL)
+
+	if(p->first != NULL)
 		MonoDestroy(m);
 	p->val = 0;
 	p->first = NULL;
-	free(p);
+
 }
 
 /**
@@ -118,6 +122,7 @@ void PolyDestroy(Poly *p){
  * @param[in] m : jednomian
  */
 void MonoDestroy(Mono *m){
+
 	PolyDestroy(m->p);
 	m->p = NULL;
 	m->exp = 0;
@@ -125,6 +130,7 @@ void MonoDestroy(Mono *m){
 		MonoDestroy(m->next);
 	m->next = NULL;
 	free(m);
+
 }
 
 Mono MonoClone(const Mono *m);
@@ -135,12 +141,12 @@ Mono MonoClone(const Mono *m);
  * @return skopiowany wielomian
  */
 Poly PolyClone(const Poly *p){
-	Poly *p2;
-	p2 = malloc(sizeof(struct Poly));
-	p2->val = p->val;
+	Poly p2;
+	p2.val = p->val;
+	p2.first = malloc(sizeof(Mono))
 	if(p->first != NULL)
-		*p2->first = MonoClone(p->first);
-	return *p2;
+		*p2.first = MonoClone(p->first);
+	return p2;
 }
 
 /**
@@ -149,13 +155,13 @@ Poly PolyClone(const Poly *p){
  * @return skopiowany jednomian
  */
 Mono MonoClone(const Mono *m){
-    Mono *m2;
-    m2 = malloc(sizeof(struct Mono));
-    m2->exp = m2->exp;
-    *m2->p = PolyClone(m->p);
+    Mono m2;
+    m2.exp = m2->exp;
+    m2.p = PolyClone(m->p);
+    m2.next = malloc
     if(m->next != NULL)
-		*m2->next = MonoClone(m->next);
-    return *m2;
+		*m2.next = MonoClone(m->next);
+    return m2;
 }
 
 /** 
@@ -165,28 +171,32 @@ Mono MonoClone(const Mono *m){
  * @return wielomian z dodanym współczynnikiem
  * */
 Poly PolyAddCoeff(const Poly *p, poly_coeff_t x){
+
 	if(PolyIsCoeff(p) == true){
 		return PolyFromCoeff(p->val + x);
 	}
-	Poly *w;
+
+	Poly w;
 	Mono *m, *curr, *prev;
-	w = malloc(sizeof(struct Poly));
 	curr = malloc(sizeof(struct Mono));
 	m = p->first;
 	if(m->exp == 0){
 		curr->exp = m->exp;
-		*curr->p = PolyAddCoeff(m->p, x);
-		w->first = curr;
+		curr->p = PolyAddCoeff(m->p, x);
+		w.first = curr;
 	}
 	else {
-		*w->first = MonoClone(m);
+		w.first = malloc(sizeof(Mono));
+
+		*w.first = MonoClone(m);
 		m = m->next;
-		prev = w->first;
+
+		prev = w.first;
 		while(m != NULL){
 			if(m->exp == 0){
-				*curr->p = PolyAddCoeff(m->p, x);
+				curr->p = PolyAddCoeff(m->p, x);
 				prev->next = curr;
-				return *w;
+				return w;
 			}
 			else {
 				*curr = MonoClone(m);
@@ -194,13 +204,13 @@ Poly PolyAddCoeff(const Poly *p, poly_coeff_t x){
 			m = m->next;
 			prev->next = curr;
 			prev = curr;
+			curr = malloc(sizeof(struct Mono));
 		}
-		curr = malloc(sizeof(struct Mono));
-		*curr->p = PolyFromCoeff(x);
+		curr->p = PolyFromCoeff(x);
 		curr->exp = 0;
 		prev->next = curr;
 	}
-	return *w;
+	return w;
 	
 }
 
@@ -226,43 +236,42 @@ Poly PolyAdd(const Poly *p, const Poly *q){
 		return PolyAddCoeff(p, q->val);
 	}
 	
-	Poly *w;
+	Poly w;
 	Mono *curr, *prev, *pm, *qm;
-	w = malloc(sizeof(struct Poly));
 	curr = malloc(sizeof(struct Mono));
-	w->first = curr;
+	w.first = curr;
 	pm = p->first;
 	qm = q->first;
 	while(pm != NULL && qm != NULL){
 		if(pm->exp == qm->exp){
 			curr->exp = pm->exp;
-			*curr->p = PolyAdd(pm->p, qm->p);
+			curr->p = PolyAdd(pm->p, qm->p);
 			pm = pm->next;
 			qm = qm->next;
 		}
 		else if(pm->exp > qm->exp){
 			curr->exp = pm->exp;
-			*curr->p = PolyClone(pm->p);
+			curr->p = PolyClone(pm->p);
 			pm = pm->next;
 		}
 		else { //*pm->exp < *qm->exp
 			curr->exp = qm->exp;
-			*curr->p = PolyClone(qm->p);
+			curr->p = PolyClone(qm->p);
 			qm = qm->next;
 		}
+
 		if(pm != NULL && qm != NULL){
 			prev = curr;
 			curr = malloc(sizeof(struct Mono));
 			prev->next = curr;
 		}
 	}
-	
 	if(pm == NULL && qm != NULL)
 		*curr->next = MonoClone(qm);
 	else if(qm == NULL && pm != NULL)
 		*curr->next = MonoClone(pm);
 
-	return *w;
+	return w;
 }
 
 /** 

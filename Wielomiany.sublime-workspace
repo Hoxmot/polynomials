@@ -115,6 +115,15 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "Wielomiany1/src/poly.c",
+			"settings":
+			{
+				"buffer_size": 13030,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -148,7 +157,9 @@
 	},
 	"expanded_folders":
 	[
-		"/home/hoxmot/Documents/IPP/Wielomiany/IPP-kb392558"
+		"/home/hoxmot/Documents/IPP/Wielomiany/IPP-kb392558",
+		"/home/hoxmot/Documents/IPP/Wielomiany/IPP-kb392558/Wielomiany1",
+		"/home/hoxmot/Documents/IPP/Wielomiany/IPP-kb392558/Wielomiany1/src"
 	],
 	"file_history":
 	[
@@ -258,8 +269,38 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "Wielomiany1/src/poly.c",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 13030,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								579,
+								579
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 216.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
 			]
 		}
 	],

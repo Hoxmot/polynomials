@@ -24,10 +24,11 @@ typedef struct Mono Mono;
 /**
  * @brief Struktura przechowująca wielomian.
  */
-typedef struct Poly
-{	
+typedef struct Poly{	
+
     Mono *first; ///< Pierwszy jednomian z tych, które tworzą ten wielomian
     poly_coeff_t val; ///< Wartość, jeżeli first = NULL, to brana jest pod uwagę.
+
 } Poly;
 
 /**
@@ -36,11 +37,12 @@ typedef struct Poly
   * Współczynnik `p` może też być wielomianem.
   * Będzie on traktowany jako wielomian nad kolejną zmienną (nie nad x).
   */
-struct Mono
-{
-    Poly *p; ///< współczynnik
+struct Mono{
+
+    Poly p; ///< współczynnik
     poly_exp_t exp; ///< wykładnik
     Mono *next; ///< następny jednomian w liście jednomianów ojca
+    
 };
 
 /**
