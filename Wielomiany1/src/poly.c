@@ -264,6 +264,7 @@ Poly PolyAdd(const Poly *p, const Poly *q){
 	Poly w;
 	Mono *curr, *prev, *pm, *qm;
 	curr = malloc(sizeof(struct Mono));
+	curr->next = NULL;
 	w.first = curr;
 	pm = p->first;
 	qm = q->first;
@@ -288,6 +289,7 @@ Poly PolyAdd(const Poly *p, const Poly *q){
 		if(pm != NULL && qm != NULL){
 			prev = curr;
 			curr = malloc(sizeof(struct Mono));
+			curr->next = NULL;
 			prev->next = curr;
 		}
 	}
@@ -307,7 +309,8 @@ Poly PolyAdd(const Poly *p, const Poly *q){
  * */
 void quick_sort(const Mono *tab[], int left, int right)
 {
-  if(right <= left) return;
+  if(right <= left)
+  	return;
  
   int i = left - 1, j = right + 1;
   Mono t = MonoClone(tab[(left+right)/2]);
@@ -318,7 +321,7 @@ void quick_sort(const Mono *tab[], int left, int right)
   {
     while(pivot->exp > tab[++i]->exp);
     while(pivot->exp < tab[--j]->exp);
-    if( i <= j){
+    if(i <= j){
 		const Mono *tmp;
 		tmp = tab[i];
 		tab[i] = tab[j];
@@ -329,9 +332,10 @@ void quick_sort(const Mono *tab[], int left, int right)
   }
  
   if(j > left)
-  quick_sort(tab, left, j);
+  	quick_sort(tab, left, j);
   if(i < right)
-  quick_sort(tab, i, right);
+  	quick_sort(tab, i, right);
+
 }
 
 /**
@@ -343,27 +347,22 @@ void quick_sort(const Mono *tab[], int left, int right)
  */
 Poly PolyAddMonos(unsigned count, const Mono monos[]){
 	quick_sort(&monos, 0, count - 1);
-	Poly *w, *tmp;
+	Poly w;
 	Mono *curr;
-	w = malloc(sizeof(struct Poly));
-	*w->first = monos[count - 1];
-	curr = w->first;
+	w.first = &(monos[count - 1]);
+	curr = w.first;
 	for(int i = count - 2; i >= 0; --i){
 		Mono *m;
-		m = malloc(sizeof(struct Mono));
-		*m = monos[i];
+		m = &(monos[i]);
 		if(curr->exp == m->exp){
-			tmp = curr->p;
-			*curr->p = PolyAdd(tmp, m->p);
-			free(tmp);
-			free(m);
+			curr->p = PolyAdd(&curr->p, m->p);
 		}
 		else {
-			*curr->next = monos[i];
+			curr->next = &(monos[i]);
 			curr = curr->next;
 		}
 	}
-	return *w;
+	return w;
 }
 
 /** 
