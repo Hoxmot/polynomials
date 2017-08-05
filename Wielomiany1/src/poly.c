@@ -412,10 +412,13 @@ Poly PolyMulCoeff(const Poly *p, poly_coeff_t x){
 Poly PolyMul(const Poly *p, const Poly *q){
 	if(PolyIsZero(p) || PolyIsZero(q))
 		return PolyZero();
+
 	if(PolyIsCoeff(p))
 		return PolyMulCoeff(q, p->val);
+
 	if(PolyIsCoeff(q))
 		return PolyMulCoeff(p, q->val);
+
 	unsigned a = 0;
 	unsigned b = 0;
 	Mono *pm, *qm;
@@ -431,16 +434,15 @@ Poly PolyMul(const Poly *p, const Poly *q){
 	}
 	unsigned len;
 	len = a * b;
-	Mono monos[len], *m;
+	Mono monos[len];
 	pm = p->first;
 	unsigned curr = 0;
 	while(pm != NULL){
 		qm = q->first;
 		while(qm != NULL){
-			m = malloc(sizeof(struct Mono));
-			m->exp = pm->exp * qm->exp;
-			*m->p = PolyMul(pm->p, qm->p);
-			monos[curr] = *m;
+			monos[curr].next = NULL;
+			monos[curr].exp = pm->exp * qm->exp;
+			monos[curr].p = PolyMul(pm->p, qm->p);
 			qm = qm->next;
 			curr++;
 		}
