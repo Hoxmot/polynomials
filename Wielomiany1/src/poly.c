@@ -372,30 +372,35 @@ Poly PolyAddMonos(unsigned count, const Mono monos[]){
  * @return x*p
  * */
 Poly PolyMulCoeff(const Poly *p, poly_coeff_t x){
-	if(x == 1)
-		return PolyClone(p);
-	if(x == (-1))
-		return PolyNeg(p);
 	if(PolyIsCoeff(p) == true)
 		return PolyFromCoeff(p->val * x);
+
+	if(x == 1)
+		return PolyClone(p);
+
+	/*
+	if(x == (-1))
+		return PolyNeg(p);
+	*/
 	
-	Poly *w;	
+	Poly w;	
 	Mono *pm, *m, *prev;
 	m = malloc(sizeof(struct Mono));
-	w = malloc(sizeof(struct Poly));
+	m->next = NULL;
 	pm = p->first;
-	w->first = m;
+	w.first = m;
 	while(pm != NULL){
-		*m->p = PolyMulCoeff(pm->p, x);
+		m->p = PolyMulCoeff(&(pm->p), x);
 		m->exp = pm->exp;
 		pm = pm->next;
 		if(pm != NULL){
 			prev = m;
 			m = malloc(sizeof(struct Mono));
+			m->next = NULL;
 			prev->next = m;
 		}
 	}
-	return *w;
+	return w;
 }
 
 /**
