@@ -247,16 +247,17 @@ Poly PolyNeg(const Poly *p);
  * @return `p + q`
  */
 Poly PolyAdd(const Poly *p, const Poly *q){
-	if(PolyIsZero(p) == true)
+	if(PolyIsZero(p))
 		return PolyClone(q);
-	if(PolyIsZero(q) == true)
+
+	if(PolyIsZero(q))
 		return PolyClone(p);
 	
-	if(PolyIsCoeff(p) == true){
+	if(PolyIsCoeff(p)){
 		return PolyAddCoeff(q, p->val);
 	}
 	
-	if(PolyIsCoeff(q) == true){
+	if(PolyIsCoeff(q)){
 		return PolyAddCoeff(p, q->val);
 	}
 	
