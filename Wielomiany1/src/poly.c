@@ -180,6 +180,7 @@ Poly PolyAddCoeff(const Poly *p, poly_coeff_t x){
 	Mono *m, *curr, *prev;
 	curr = malloc(sizeof(struct Mono));
 	m = p->first;
+	/*
 	if(m->exp == 0){
 		curr->exp = m->exp;
 		curr->p = PolyAddCoeff(m->p, x);
@@ -209,9 +210,32 @@ Poly PolyAddCoeff(const Poly *p, poly_coeff_t x){
 		curr->p = PolyFromCoeff(x);
 		curr->exp = 0;
 		prev->next = curr;
+	}*/
+
+	w.first = malloc(sizeof(Mono));
+	prev = w.first;
+	while(m != NULL){
+		if(m->exp == 0){
+			curr->exp = m->exp;
+			curr->next = NULL;
+			curr->p = PolyAddCoeff(m->p, x);
+			prev->next = curr;
+			return w;
+		}
+		else {
+			*curr = MonoClone(m);
+		}
+		m = m->next;
+		prev->next = curr;
+		prev = curr;
+		curr = malloc(sizeof(struct Mono));
 	}
+	curr->next = NULL;
+	curr->p = PolyFromCoeff(x);
+	curr->exp = 0;
+	prev->next = curr;
 	return w;
-	
+
 }
 
 Poly PolyNeg(const Poly *p);
