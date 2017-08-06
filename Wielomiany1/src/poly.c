@@ -212,7 +212,7 @@ Poly PolyAddCoeff(const Poly *p, poly_coeff_t x){
 		prev->next = curr;
 	}*/
 
-	w.first = malloc(sizeof(Mono));
+	w.first = malloc(sizeof(struct Mono));
 	prev = w.first;
 	while(m != NULL){
 		if(m->exp == 0){
