@@ -493,11 +493,9 @@ Poly PolyNeg(const Poly *p){
  * @return `p - q`
  */
 Poly PolySub(const Poly *p, const Poly *q){
-	Poly *tmp, *res;
-	res = malloc(sizeof(struct Poly));
-	tmp = malloc(sizeof(struct Poly));
-	*tmp = PolyNeg(q);
-	*res = PolyAdd(p, tmp);
+	Poly tmp, res;
+	tmp = PolyNeg(q);
+	res = PolyAdd(p, tmp);
 	PolyDestroy(tmp);
 	return *res;
 }
@@ -510,9 +508,7 @@ Poly PolySub(const Poly *p, const Poly *q){
  * @return większy wykładnik
  * */
 poly_exp_t max(poly_exp_t a, poly_exp_t b){
-	if(a >= b)
-		return a;
-	else return b;
+	return a >= b ? a : b;
 }
 
 /**
@@ -669,19 +665,17 @@ Poly PolyAt(const Poly *p, poly_coeff_t x){
 		return *p;
 	if(x == 0)
 		return PolyZero();
-	Poly *w;
+	Poly w;
 	Mono *pm;
-	w = malloc(sizeof(struct Poly));
 	pm = p->first;
-	*w = PolyMulCoeff(pm->p, coeff_pow(x, pm->exp));
+	w = PolyMulCoeff(pm->p, coeff_pow(x, pm->exp));
 	pm = pm->next;
 	while(pm != NULL){
-		Poly *tmp;
-		tmp = malloc(sizeof(struct Poly));
-		*tmp = PolyMulCoeff(pm->p, coeff_pow(x, pm->exp));
-		*w = PolyAdd(w, tmp);
+		Poly tmp;
+		tmp = PolyMulCoeff(pm->p, coeff_pow(x, pm->exp));
+		w = PolyAdd(w, tmp);
 		PolyDestroy(tmp);
 		pm = pm->next;
 	}
-	return *w;
+	return w;
 }
