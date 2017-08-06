@@ -496,7 +496,7 @@ Poly PolySub(const Poly *p, const Poly *q){
 	Poly tmp, res;
 	tmp = PolyNeg(q);
 	res = PolyAdd(p, &tmp);
-	PolyDestroy(tmp);
+	PolyDestroy(&tmp);
 	return res;
 }
 
@@ -539,7 +539,7 @@ poly_exp_t PolyDegBy(const Poly *p, unsigned var_idx){
 	}
 	if(var_idx > 0){
 		while(m != NULL){
-			mx = max(mx, PolyDegBy(m->p, var_idx - 1));
+			mx = max(mx, PolyDegBy(&m->p, var_idx - 1));
 			m = m->next;
 		}
 	}
@@ -561,7 +561,7 @@ poly_exp_t PolyDeg(const Poly *p){
 	mx = (-1);
 	m = p->first;
 	while(m != NULL){
-		tmp = PolyDeg(m->p);
+		tmp = PolyDeg(&m->p);
 		if(tmp != (-1)){
 			tmp += m->exp;
 		}
@@ -599,14 +599,14 @@ bool PolyIsEq(const Poly *p, const Poly *q){
 	pm = p->first;
 	qm = p->first;
 	while(pm != NULL && qm != NULL){
-		if(PolyIsZero(pm->p) == true)
+		if(PolyIsZero(&pm->p) == true)
 			pm = pm->next;
-		else if(PolyIsZero(qm->p) == true)
+		else if(PolyIsZero(&qm->p) == true)
 			qm = qm->next;
 		else if(pm->exp != qm->exp)
 			return false;
 		else { //*pm->exp == *qm->exp
-			if(PolyIsEq(pm->p, qm->p) != true)
+			if(PolyIsEq(&pm->p, &qm->p) != true)
 				return false;
 			pm = pm->next;
 			qm = qm->next;
@@ -668,13 +668,13 @@ Poly PolyAt(const Poly *p, poly_coeff_t x){
 	Poly w;
 	Mono *pm;
 	pm = p->first;
-	w = PolyMulCoeff(pm->p, coeff_pow(x, pm->exp));
+	w = PolyMulCoeff(&pm->p, coeff_pow(x, pm->exp));
 	pm = pm->next;
 	while(pm != NULL){
 		Poly tmp;
-		tmp = PolyMulCoeff(pm->p, coeff_pow(x, pm->exp));
-		w = PolyAdd(w, tmp);
-		PolyDestroy(tmp);
+		tmp = PolyMulCoeff(&pm->p, coeff_pow(x, pm->exp));
+		w = PolyAdd(&w, &tmp);
+		PolyDestroy(&tmp);
 		pm = pm->next;
 	}
 	return w;
