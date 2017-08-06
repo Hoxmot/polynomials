@@ -141,6 +141,8 @@ Mono MonoClone(const Mono *m);
  * @return skopiowany wielomian
  */
 Poly PolyClone(const Poly *p){
+	if(p == NULL)
+		return NULL;
 	Poly p2;
 	p2.val = p->val;
 	p2.first = malloc(sizeof(struct Mono));
@@ -155,6 +157,8 @@ Poly PolyClone(const Poly *p){
  * @return skopiowany jednomian
  */
 Mono MonoClone(const Mono *m){
+	if(m == NULL)
+		return NULL;
     Mono m2;
     m2.exp = m->exp;
     m2.p = PolyClone(&m->p);
