@@ -111,7 +111,7 @@ void MonoDestroy(Mono *m);
 void PolyDestroy(Poly *p){
 
 	if(p->first != NULL)
-		MonoDestroy(m);
+		MonoDestroy(p->first);
 	p->val = 0;
 	p->first = NULL;
 
@@ -123,8 +123,8 @@ void PolyDestroy(Poly *p){
  */
 void MonoDestroy(Mono *m){
 
-	PolyDestroy(m->p);
-	m->p = NULL;
+	PolyDestroy(&m->p);
+	//m->p = NULL;
 	m->exp = 0;
 	if(m->next != NULL)
 		MonoDestroy(m->next);
@@ -143,7 +143,7 @@ Mono MonoClone(const Mono *m);
 Poly PolyClone(const Poly *p){
 	Poly p2;
 	p2.val = p->val;
-	p2.first = malloc(sizeof(Mono))
+	p2.first = malloc(sizeof(struct Mono));
 	if(p->first != NULL)
 		*p2.first = MonoClone(p->first);
 	return p2;
@@ -156,9 +156,9 @@ Poly PolyClone(const Poly *p){
  */
 Mono MonoClone(const Mono *m){
     Mono m2;
-    m2.exp = m2->exp;
-    m2.p = PolyClone(m->p);
-    m2.next = malloc
+    m2.exp = m->exp;
+    m2.p = PolyClone(&m->p);
+    m2.next = malloc(sizeof(struct  Mono));
     if(m->next != NULL)
 		*m2.next = MonoClone(m->next);
     return m2;
@@ -218,7 +218,7 @@ Poly PolyAddCoeff(const Poly *p, poly_coeff_t x){
 		if(m->exp == 0){
 			curr->exp = m->exp;
 			curr->next = NULL;
-			curr->p = PolyAddCoeff(m->p, x);
+			curr->p = PolyAddCoeff(&m->p, x);
 			prev->next = curr;
 			return w;
 		}
@@ -271,18 +271,18 @@ Poly PolyAdd(const Poly *p, const Poly *q){
 	while(pm != NULL && qm != NULL){
 		if(pm->exp == qm->exp){
 			curr->exp = pm->exp;
-			curr->p = PolyAdd(pm->p, qm->p);
+			curr->p = PolyAdd(&pm->p, &qm->p);
 			pm = pm->next;
 			qm = qm->next;
 		}
 		else if(pm->exp > qm->exp){
 			curr->exp = pm->exp;
-			curr->p = PolyClone(pm->p);
+			curr->p = PolyClone(&pm->p);
 			pm = pm->next;
 		}
 		else { //*pm->exp < *qm->exp
 			curr->exp = qm->exp;
-			curr->p = PolyClone(qm->p);
+			curr->p = PolyClone(&qm->p);
 			qm = qm->next;
 		}
 
@@ -355,7 +355,7 @@ Poly PolyAddMonos(unsigned count, const Mono monos[]){
 		Mono *m;
 		m = &(monos[i]);
 		if(curr->exp == m->exp){
-			curr->p = PolyAdd(&curr->p, m->p);
+			curr->p = PolyAdd(&curr->p, &m->p);
 		}
 		else {
 			curr->next = &(monos[i]);
@@ -442,7 +442,7 @@ Poly PolyMul(const Poly *p, const Poly *q){
 		while(qm != NULL){
 			monos[curr].next = NULL;
 			monos[curr].exp = pm->exp * qm->exp;
-			monos[curr].p = PolyMul(pm->p, qm->p);
+			monos[curr].p = PolyMul(&pm->p, &qm->p);
 			qm = qm->next;
 			curr++;
 		}
@@ -458,7 +458,7 @@ Poly PolyMul(const Poly *p, const Poly *q){
  */
 Poly PolyNeg(const Poly *p){
 	Poly minus = PolyFromCoeff(-1);
-	return PolyMul(p, minus);
+	return PolyMul(p, &minus);
 	/*
 	if(PolyIsZero(p) == true)
 		return PolyClone(p);
@@ -495,9 +495,9 @@ Poly PolyNeg(const Poly *p){
 Poly PolySub(const Poly *p, const Poly *q){
 	Poly tmp, res;
 	tmp = PolyNeg(q);
-	res = PolyAdd(p, tmp);
+	res = PolyAdd(p, &tmp);
 	PolyDestroy(tmp);
-	return *res;
+	return res;
 }
 
 
