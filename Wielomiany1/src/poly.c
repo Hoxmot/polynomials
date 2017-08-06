@@ -457,6 +457,9 @@ Poly PolyMul(const Poly *p, const Poly *q){
  * @return `-p`
  */
 Poly PolyNeg(const Poly *p){
+	Poly minus = PolyFromCoeff(-1);
+	return PolyMul(p, minus);
+	/*
 	if(PolyIsZero(p) == true)
 		return PolyClone(p);
 	Poly *w;
@@ -480,6 +483,7 @@ Poly PolyNeg(const Poly *p){
 		}
 	}
 	return *w;
+	*/
 }
 
 /**

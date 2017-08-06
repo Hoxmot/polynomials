@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"c",
+				"curr"
+			],
+			[
+				"mo",
+				"Mono"
+			],
+			[
 				"exe",
 				"exercise2"
 			],
@@ -119,7 +127,16 @@
 			"file": "Wielomiany1/src/poly.c",
 			"settings":
 			{
-				"buffer_size": 13030,
+				"buffer_size": 13169,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Wielomiany1/src/poly.h",
+			"settings":
+			{
+				"buffer_size": 4625,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -197,6 +214,11 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"m->",
+			"m",
+			";\n",
+			"TODO",
+			"PolyNeg",
 			"introduction",
 			"SYMMETRIC",
 			"introduction",
@@ -275,18 +297,18 @@
 				{
 					"buffer": 0,
 					"file": "Wielomiany1/src/poly.c",
-					"semi_transient": true,
+					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 13030,
+						"buffer_size": 13169,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								579,
-								579
+								8246,
+								8246
 							]
 						],
 						"settings":
@@ -295,10 +317,40 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 216.0,
+						"translation.y": 7334.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "Wielomiany1/src/poly.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4625,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1050,
+								1050
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1620.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
 					"type": "text"
 				}
 			]
