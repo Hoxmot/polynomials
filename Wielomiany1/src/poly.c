@@ -144,9 +144,11 @@ Mono MonoClone(const Mono *m);
 Poly PolyClone(const Poly *p){
 	Poly p2;
 	p2.val = p->val;
-	p2.first = malloc(sizeof(struct Mono));
-	if(p->first != NULL)
+	if(p->first != NULL){
+		p2.first = malloc(sizeof(struct Mono));
 		*p2.first = MonoClone(p->first);
+	}
+	else p2.first = NULL;
 	return p2;
 }
 
@@ -159,9 +161,12 @@ Mono MonoClone(const Mono *m){
     Mono m2;
     m2.exp = m->exp;
     m2.p = PolyClone(&m->p);
-    m2.next = malloc(sizeof(struct  Mono));
-    if(m->next != NULL)
+    
+    if(m->next != NULL){
+    	m2.next = malloc(sizeof(struct  Mono));
 		*m2.next = MonoClone(m->next);
+    }
+    else m2.next = NULL;
     return m2;
 }
 
@@ -215,6 +220,8 @@ Poly PolyAddCoeff(const Poly *p, poly_coeff_t x){
 
 	w.first = malloc(sizeof(struct Mono));
 	prev = w.first;
+	prev->exp = 0;
+	prev->next = NULL;
 	while(m != NULL){
 		if(m->exp == 0){
 			curr->exp = m->exp;
@@ -266,6 +273,7 @@ Poly PolyAdd(const Poly *p, const Poly *q){
 	Mono *curr, *prev, *pm, *qm;
 	curr = malloc(sizeof(struct Mono));
 	curr->next = NULL;
+	curr->exp = 0;
 	w.first = curr;
 	pm = p->first;
 	qm = q->first;
@@ -290,6 +298,7 @@ Poly PolyAdd(const Poly *p, const Poly *q){
 		if(pm != NULL && qm != NULL){
 			prev = curr;
 			curr = malloc(sizeof(struct Mono));
+			curr->exp = 0;
 			curr->next = NULL;
 			prev->next = curr;
 		}
@@ -370,6 +379,7 @@ Poly PolyMulCoeff(const Poly *p, poly_coeff_t x){
 	Poly w;	
 	Mono *pm, *m, *prev;
 	m = malloc(sizeof(struct Mono));
+	m->exp = 0;
 	m->next = NULL;
 	pm = p->first;
 	w.first = m;
@@ -380,6 +390,7 @@ Poly PolyMulCoeff(const Poly *p, poly_coeff_t x){
 		if(pm != NULL){
 			prev = m;
 			m = malloc(sizeof(struct Mono));
+			m->exp = 0;
 			m->next = NULL;
 			prev->next = m;
 		}
