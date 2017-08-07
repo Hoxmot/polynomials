@@ -127,7 +127,16 @@
 			"file": "Wielomiany1/src/poly.c",
 			"settings":
 			{
-				"buffer_size": 13169,
+				"buffer_size": 13197,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Wielomiany1/src/test_poly.c",
+			"settings":
+			{
+				"buffer_size": 47060,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -214,6 +223,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"PolyAddMonos",
+			"PolyAddMons",
+			"malloc",
 			"m->",
 			"m",
 			";\n",
@@ -291,7 +303,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -300,15 +312,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 13169,
+						"buffer_size": 13197,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								8246,
-								8246
+								6031,
+								6031
 							]
 						],
 						"settings":
@@ -317,14 +329,44 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 7334.0,
+						"translation.y": 5502.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "Wielomiany1/src/test_poly.c",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 47060,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								16461,
+								16461
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 7302.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 1,
+					"buffer": 2,
 					"file": "Wielomiany1/src/poly.h",
 					"semi_transient": false,
 					"settings":
@@ -336,8 +378,8 @@
 						"selection":
 						[
 							[
-								1050,
-								1050
+								2823,
+								2823
 							]
 						],
 						"settings":
@@ -347,7 +389,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1620.0,
+						"translation.y": 1458.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,

@@ -306,40 +306,16 @@ Poly PolyAdd(const Poly *p, const Poly *q){
 }
 
 /** 
- * @brief Quicksort
- * @param[in] tab : wskaźnik na tablicę do sortowania
- * @param[in] left : lewy koniec sortowania
- * @param[in] right : prawy koniec sortowania
- * */
-void quick_sort(const Mono *tab[], int left, int right)
+* @brief Porównuje dwa jednomiany
+* @param[in] p : wskaźnik na pierwszy jednomian
+* @param[in] q : wskaźnik na drugi jednomian
+* @return liczba dodatnia (p > q), ujemna (p < q) lub zero (p = q)
+*/
+int comparator(const void *p, const void *q) 
 {
-  if(right <= left)
-  	return;
- 
-  int i = left - 1, j = right + 1;
-  Mono t = MonoClone(tab[(left+right)/2]);
-  Mono *pivot;
-  pivot = &t;
- 
-  while(1)
-  {
-    while(pivot->exp > tab[++i]->exp);
-    while(pivot->exp < tab[--j]->exp);
-    if(i <= j){
-		const Mono *tmp;
-		tmp = tab[i];
-		tab[i] = tab[j];
-		tab[j] = tmp;
-      }
-    else
-      break;
-  }
- 
-  if(j > left)
-  	quick_sort(tab, left, j);
-  if(i < right)
-  	quick_sort(tab, i, right);
-
+    int l = ((struct Mono *)p)->marks;
+    int r = ((struct Mono *)q)->marks; 
+    return (l - r);
 }
 
 /**
@@ -350,7 +326,8 @@ void quick_sort(const Mono *tab[], int left, int right)
  * @return wielomian będący sumą jednomianów
  */
 Poly PolyAddMonos(unsigned count, const Mono monos[]){
-	quick_sort(&monos, 0, count - 1);
+	//quick_sort(&monos, 0, count - 1);
+	qsort(v&monos, (count * sizeof(struct Mono), sizeof(struct Mono), &comparator)
 	Poly w;
 	Mono *curr;
 	w.first = &(monos[count - 1]);
