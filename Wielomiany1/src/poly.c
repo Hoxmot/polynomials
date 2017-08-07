@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <assert.h>
 
 /** Typ współczynników wielomianu */
 typedef long poly_coeff_t;
@@ -141,8 +142,6 @@ Mono MonoClone(const Mono *m);
  * @return skopiowany wielomian
  */
 Poly PolyClone(const Poly *p){
-	if(p == NULL)
-		return NULL;
 	Poly p2;
 	p2.val = p->val;
 	p2.first = malloc(sizeof(struct Mono));
@@ -157,8 +156,6 @@ Poly PolyClone(const Poly *p){
  * @return skopiowany jednomian
  */
 Mono MonoClone(const Mono *m){
-	if(m == NULL)
-		return NULL;
     Mono m2;
     m2.exp = m->exp;
     m2.p = PolyClone(&m->p);
@@ -311,11 +308,10 @@ Poly PolyAdd(const Poly *p, const Poly *q){
 * @param[in] q : wskaźnik na drugi jednomian
 * @return liczba dodatnia (p > q), ujemna (p < q) lub zero (p = q)
 */
-int comparator(const void *p, const void *q) 
-{
-    int l = ((struct Mono *)p)->marks;
-    int r = ((struct Mono *)q)->marks; 
-    return (l - r);
+int cmp_mono(const void *p, const void *q){
+    Mono *m1 = (Mono*) p;
+    Mono *m2 = (Mono*) q;
+    return m1->exp - m2->exp;
 }
 
 /**
@@ -327,14 +323,21 @@ int comparator(const void *p, const void *q)
  */
 Poly PolyAddMonos(unsigned count, const Mono monos[]){
 	//quick_sort(&monos, 0, count - 1);
-	qsort(v&monos, (count * sizeof(struct Mono), sizeof(struct Mono), &comparator)
+	/*for(int i = 0; i < count; i++){
+		Mono *tmp;
+		tmp = &monos[i];
+		assert(tmp != NULL);
+	}*/
+	qsort(monos, count, sizeof(struct Mono), &cmp_mono);
 	Poly w;
 	Mono *curr;
-	w.first = &(monos[count - 1]);
+	w.first = malloc(sizeof(struct Mono));
+	*w.first = MonoClone(&monos[count - 1]);
 	curr = w.first;
 	for(int i = count - 2; i >= 0; --i){
 		Mono *m;
-		m = &(monos[i]);
+		m = malloc(sizeof(struct Mono));
+		*m = MonoClone(&monos[i]);
 		if(curr->exp == m->exp){
 			curr->p = PolyAdd(&curr->p, &m->p);
 		}
