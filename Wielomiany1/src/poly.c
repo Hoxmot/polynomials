@@ -83,12 +83,12 @@ bool PolyIsZero(const Poly *p){
 		else return false;
 	}
 	//TODO
-	/*
+	
 	else {
 		Mono *m;
 		m = p->first;
 		while(m != NULL){
-			if(PolyIsZero(m->p) == true){
+			if(PolyIsZero(&m->p) == true){
 				if(m->next == NULL)
 					return true;
 				else {
@@ -98,7 +98,7 @@ bool PolyIsZero(const Poly *p){
 			else return false;
 		}
 	}
-	*/
+	
 	return false;
 
 }
@@ -365,8 +365,9 @@ Poly PolyAddMonos(unsigned count, const Mono monos[]){
  * @return x*p
  * */
 Poly PolyMulCoeff(const Poly *p, poly_coeff_t x){
-	if(PolyIsCoeff(p) == true)
+	if(PolyIsCoeff(p)){
 		return PolyFromCoeff(p->val * x);
+	}
 
 	if(x == 1)
 		return PolyClone(p);
@@ -452,8 +453,8 @@ Poly PolyMul(const Poly *p, const Poly *q){
  * @return `-p`
  */
 Poly PolyNeg(const Poly *p){
-	Poly minus = PolyFromCoeff(-1);
-	return PolyMul(p, &minus);
+	//Poly minus = PolyFromCoeff(-1);
+	return PolyMulCoeff(p, -1);
 	/*
 	if(PolyIsZero(p) == true)
 		return PolyClone(p);
