@@ -351,7 +351,7 @@ Poly PolyAddMonos(unsigned count, const Mono monos[]){
 			curr->p = PolyAdd(&curr->p, &m->p);
 		}
 		else {
-			curr->next = &(monos[i]);
+			curr->next = m;
 			curr = curr->next;
 		}
 	}
