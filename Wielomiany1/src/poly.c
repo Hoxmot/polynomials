@@ -601,6 +601,7 @@ poly_exp_t PolyDeg(const Poly *p){
 		if(tmp != (-1)){
 			tmp += m->exp;
 		}
+		m = m->next;
 		mx = max(mx, tmp);
 	}
 	return mx;
