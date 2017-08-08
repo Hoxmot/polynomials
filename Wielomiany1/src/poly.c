@@ -283,15 +283,20 @@ Poly PolyAdd(const Poly *p, const Poly *q){
 	w.first = curr;
 	pm = p->first;
 	qm = q->first;
+	bool czyZero;
 	while(pm != NULL && qm != NULL){
+		czyZero = false;
 		if(pm->exp == qm->exp){
 			curr->exp = pm->exp;
 			curr->p = PolyAdd(&pm->p, &qm->p);
-			if(PolyIsZero(curr->p)){
-				PolyDestroy(&curr->p)
-			}
 			pm = pm->next;
 			qm = qm->next;
+			if(PolyIsZero(&curr->p)){
+				PolyDestroy(&curr->p)
+				if(pm == NULL || qm == NULL)
+					free(curr);
+				continue;
+			}
 		}
 		else if(pm->exp > qm->exp){
 			curr->exp = pm->exp;
@@ -358,6 +363,7 @@ Poly PolyAddMonos(unsigned count, const Mono monos[]){
 		*m = MonoClone(&monos[i]);
 		if(curr->exp == m->exp){
 			curr->p = PolyAdd(&curr->p, &m->p);
+			if(PolyIsZero(&curr->p))
 		}
 		else {
 			curr->next = m;
