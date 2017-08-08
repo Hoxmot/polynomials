@@ -227,7 +227,13 @@ Poly PolyAddCoeff(const Poly *p, poly_coeff_t x){
 			curr->exp = m->exp;
 			curr->next = NULL;
 			curr->p = PolyAddCoeff(&m->p, x);
-			prev->next = curr;
+		 	if(PolyIsZero(curr->p)){
+		 		PolyDestroy(&curr->p):
+		 		free(curr);
+		 		prev->next = NULL;
+		 	}
+		 	else
+				prev->next = curr;
 			return w;
 		}
 		else {
@@ -281,6 +287,9 @@ Poly PolyAdd(const Poly *p, const Poly *q){
 		if(pm->exp == qm->exp){
 			curr->exp = pm->exp;
 			curr->p = PolyAdd(&pm->p, &qm->p);
+			if(PolyIsZero(curr->p)){
+				PolyDestroy(&curr->p)
+			}
 			pm = pm->next;
 			qm = qm->next;
 		}
