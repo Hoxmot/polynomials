@@ -352,21 +352,32 @@ Poly PolyAddMonos(unsigned count, const Mono monos[]){
 		assert(tmp != NULL);
 	}*/
 	qsort(monos, count, sizeof(struct Mono), &cmp_mono);
-	Poly w;
-	Mono *curr;
+	Poly w, tmp;
+	Mono *curr, *prev;
 	w.first = malloc(sizeof(struct Mono));
 	*w.first = MonoClone(&monos[count - 1]);
 	curr = w.first;
+	prev = NULL;
+	Mono *m;
 	for(int i = count - 2; i >= 0; --i){
-		Mono *m;
 		m = malloc(sizeof(struct Mono));
 		*m = MonoClone(&monos[i]);
 		if(curr->exp == m->exp){
-			curr->p = PolyAdd(&curr->p, &m->p);
-			if(PolyIsZero(&curr->p))
+			tmp = PolyAdd(&curr->p, &m->p);
+			PolyDestroy(&curr->p);
+			curr->p = tmp;
+			if(PolyIsZero(&curr->p)){
+				MonoDestroy(curr);
+				if(prev == NULL){
+					w.first = malloc(sizeof(struct Mono));
+					curr = w.first;
+				}
+				else curr = prev;
+			}
 		}
 		else {
 			curr->next = m;
+			prev = curr;
 			curr = curr->next;
 		}
 	}
