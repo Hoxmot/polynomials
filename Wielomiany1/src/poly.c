@@ -227,8 +227,8 @@ Poly PolyAddCoeff(const Poly *p, poly_coeff_t x){
 			curr->exp = m->exp;
 			curr->next = NULL;
 			curr->p = PolyAddCoeff(&m->p, x);
-		 	if(PolyIsZero(curr->p)){
-		 		PolyDestroy(&curr->p):
+		 	if(PolyIsZero(&curr->p)){
+		 		PolyDestroy(&curr->p);
 		 		free(curr);
 		 		prev->next = NULL;
 		 	}
@@ -277,10 +277,12 @@ Poly PolyAdd(const Poly *p, const Poly *q){
 	
 	Poly w;
 	Mono *curr, *prev, *pm, *qm;
+	prev = NULL;
 	curr = malloc(sizeof(struct Mono));
 	curr->next = NULL;
 	curr->exp = 0;
 	w.first = curr;
+	w.val = 0;
 	pm = p->first;
 	qm = q->first;
 	bool czyZero;
@@ -292,9 +294,14 @@ Poly PolyAdd(const Poly *p, const Poly *q){
 			pm = pm->next;
 			qm = qm->next;
 			if(PolyIsZero(&curr->p)){
-				PolyDestroy(&curr->p)
-				if(pm == NULL || qm == NULL)
+				PolyDestroy(&curr->p);
+				if(pm == NULL || qm == NULL){
 					free(curr);
+					if(prev != NULL){
+						curr = prev;
+						curr->next = NULL;
+					}
+				}
 				continue;
 			}
 		}
@@ -317,10 +324,16 @@ Poly PolyAdd(const Poly *p, const Poly *q){
 			prev->next = curr;
 		}
 	}
-	if(pm == NULL && qm != NULL)
+	if(prev == NULL)
+		w.first = NULL;
+	if(pm == NULL && qm != NULL){
+		curr->next = malloc(sizeof(struct Mono));
 		*curr->next = MonoClone(qm);
-	else if(qm == NULL && pm != NULL)
+	}
+	else if(qm == NULL && pm != NULL){
+		curr->next = malloc(sizeof(struct Mono));
 		*curr->next = MonoClone(pm);
+	}
 
 	return w;
 }
@@ -355,6 +368,7 @@ Poly PolyAddMonos(unsigned count, const Mono monos[]){
 	Poly w, tmp;
 	Mono *curr, *prev;
 	w.first = malloc(sizeof(struct Mono));
+	w.val = 0;
 	*w.first = MonoClone(&monos[count - 1]);
 	curr = w.first;
 	prev = NULL;
