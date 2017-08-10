@@ -372,13 +372,13 @@ Poly PolyAddMonos(unsigned count, const Mono monos[]){
 	Mono *curr, *prev;
 	w.first = malloc(sizeof(struct Mono));
 	w.val = 0;
-	*w.first = MonoClone(&monos[count - 1]);
+	*w.first = monos[count - 1];
 	curr = w.first;
 	prev = NULL;
 	Mono *m;
 	for(int i = count - 2; i >= 0; --i){
 		m = malloc(sizeof(struct Mono));
-		*m = MonoClone(&monos[i]);
+		*m = monos[i];
 		if(curr->exp == m->exp){
 			tmp = PolyAdd(&curr->p, &m->p);
 			PolyDestroy(&curr->p);
