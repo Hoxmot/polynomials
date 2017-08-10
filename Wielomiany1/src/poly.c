@@ -329,17 +329,8 @@ Poly PolyAdd(const Poly *p, const Poly *q){
 			curr->p = PolyAdd(&pm->p, &qm->p);
 			pm = pm->next;
 			qm = qm->next;
-			if(PolyIsZero(&curr->p)){
-				PolyDestroy(&curr->p);
-				if(pm == NULL || qm == NULL){
-					free(curr);
-					if(prev != NULL){
-						curr = prev;
-						curr->next = NULL;
-					}
-				}
-				continue;
-			}
+			if(PolyIsZero(&curr->p))
+				MonoDestroy(curr);
 		}
 		else if(pm->exp > qm->exp){
 			curr->exp = pm->exp;
@@ -352,24 +343,22 @@ Poly PolyAdd(const Poly *p, const Poly *q){
 			qm = qm->next;
 		}
 
-		if(pm != NULL && qm != NULL){
-			prev = curr;
-			curr = malloc(sizeof(struct Mono));
-			curr->exp = 0;
-			curr->next = NULL;
-			prev->next = curr;
-		}
+		prev = curr;
+		curr = malloc(sizeof(struct Mono));
+		curr->exp = 0;
+		curr->next = NULL;
+		prev->next = curr;
 	}
-	if(prev == NULL)
+	if(prev == NULL && pm == NULL && qm == NULL)
 		w.first = NULL;
-	if(pm == NULL && qm != NULL){
-		curr->next = malloc(sizeof(struct Mono));
-		*curr->next = MonoClone(qm);
+	else if(pm == NULL && qm != NULL){
+		*curr = MonoClone(qm);
 	}
 	else if(qm == NULL && pm != NULL){
-		curr->next = malloc(sizeof(struct Mono));
-		*curr->next = MonoClone(pm);
+		*curr = MonoClone(pm);
 	}
+	else
+		free(curr);
 
 	return w;
 }
@@ -403,32 +392,53 @@ Poly PolyAddMonos(unsigned count, const Mono monos[]){
 	qsort(monos, count, sizeof(struct Mono), &cmp_mono);
 	Poly w, tmp;
 	Mono *curr, *prev;
+	w.first = NULL;
+	w.val = 0;
+	/*
 	w.first = malloc(sizeof(struct Mono));
 	w.val = 0;
 	*w.first = monos[count - 1];
 	curr = w.first;
+	*/
 	prev = NULL;
 	Mono *m;
-	for(int i = count - 2; i >= 0; --i){
-		m = malloc(sizeof(struct Mono));
-		*m = monos[i];
-		if(curr->exp == m->exp){
-			tmp = PolyAdd(&curr->p, &m->p);
-			PolyDestroy(&curr->p);
-			curr->p = tmp;
-			if(PolyIsZero(&curr->p)){
-				MonoDestroy(curr);
-				if(prev == NULL){
-					w.first = malloc(sizeof(struct Mono));
-					curr = w.first;
+	for(int i = count - 1; i >= 0; --i){
+		if(w.first != NULL){
+			m = malloc(sizeof(struct Mono));
+			*m = monos[i];
+			if(curr->exp == m->exp){
+				tmp = PolyAdd(&curr->p, &m->p);
+				PolyDestroy(&curr->p);
+				curr->p = tmp;
+				if(PolyIsZero(&curr->p)){
+					MonoDestroy(curr);
+					free(curr);
+					if(prev != NULL)
+						curr = prev;
+					else {
+						w.first = NULL;
+						curr = w.first;
+						/*
+						w.first = malloc(sizeof(struct Mono));
+						curr = w.first;
+						curr->exp = 0;
+						curr->next = NULL;
+						*/
+					}
 				}
-				else curr = prev;
+			}
+			else {
+				curr->next = m;
+				prev = curr;
+				curr = curr->next;
 			}
 		}
 		else {
-			curr->next = m;
-			prev = curr;
-			curr = curr->next;
+			w.first = malloc(sizeof(struct Mono));
+			w.first->next = NULL;
+			w.first->exp = 0;
+			*w.first = monos[i];
+			curr = w.first;
 		}
 	}
 	return w;
@@ -737,7 +747,7 @@ Poly PolyAt(const Poly *p, poly_coeff_t x){
 	Poly w;
 	Mono *pm;
 	pm = p->first;
-	printf("%ld <-> %ld\n", coeff_pow(x, pm->exp), pm->exp);
+	//printf("%ld <-> %ld\n", coeff_pow(x, pm->exp), pm->exp);
 	w = PolyMulCoeff(&pm->p, coeff_pow(x, pm->exp));
 	pm = pm->next;
 	while(pm != NULL){
