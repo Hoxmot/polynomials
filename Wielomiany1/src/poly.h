@@ -45,6 +45,10 @@ struct Mono{
     
 };
 
+// Dodane na potrzeby debugowania
+void monoPrint(Mono *m);
+void polyPrint(Poly *p);
+
 /**
  * Tworzy wielomian, który jest współczynnikiem.
  * @param[in] c : wartość współczynnika
