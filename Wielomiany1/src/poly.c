@@ -703,20 +703,16 @@ poly_coeff_t coeff_pow(poly_coeff_t x, poly_exp_t a){
 		return 0;
 	if(a == 0)
 		return 1;
-	poly_coeff_t res;
-	res = x;
-	a--;
-	while(a > 0){
-		if(a % 2 == 1){
-			res *= x;
-			a--;
-		}
-		else { //a % 2 == 0
-			res *= res;
-			a = a / 2;
-		}
-	}
-	return res;
+	poly_coeff_t result = 1;
+    while (a)
+    {
+        if (a & 1)
+            result *= x;
+        a >>= 1;
+        x *= x;
+    }
+
+    return result;
 }
 
 
@@ -741,6 +737,7 @@ Poly PolyAt(const Poly *p, poly_coeff_t x){
 	Poly w;
 	Mono *pm;
 	pm = p->first;
+	printf("%ld <-> %ld\n", coeff_pow(x, pm->exp), pm->exp);
 	w = PolyMulCoeff(&pm->p, coeff_pow(x, pm->exp));
 	pm = pm->next;
 	while(pm != NULL){
