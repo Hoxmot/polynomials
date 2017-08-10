@@ -111,8 +111,10 @@ void MonoDestroy(Mono *m);
  */
 void PolyDestroy(Poly *p){
 
-	if(p->first != NULL)
+	if(p->first != NULL){
 		MonoDestroy(p->first);
+		free(p->first);
+	}
 	p->val = 0;
 	p->first = NULL;
 
@@ -127,10 +129,11 @@ void MonoDestroy(Mono *m){
 	PolyDestroy(&m->p);
 	//m->p = NULL;
 	m->exp = 0;
-	if(m->next != NULL)
+	if(m->next != NULL){
 		MonoDestroy(m->next);
+		free(m->next);
+	}
 	m->next = NULL;
-	free(m);
 
 }
 
