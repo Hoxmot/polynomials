@@ -8,6 +8,7 @@
 
 #include "poly.h"
 #include <stdlib.h>
+#include <stdio.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <assert.h>
@@ -17,6 +18,40 @@ typedef long poly_coeff_t;
 
 /** Typ wykładników wielomianu */
 typedef int poly_exp_t;
+
+void monoPrint(Mono *m);
+
+/** @brief Funkcja drukująca wielomian na standardowe wyjście.
+ * Stworzona specjalnie na potrzeby debugowania
+ * @param[in] p : wielomian do druku
+ * */
+void polyPrint(Poly *p){
+	if(PolyIsZero(p)){
+		printf("0");
+	}
+	else if(PolyIsCoeff(p)){
+		printf("%ld", p->val);
+	}
+	else {
+		monoPrint(p->first);
+	}
+}
+
+/** @brief Funkcja drukująca jednomian na standardowe wyjście.
+ * Stworzona specjalnie na potrzeby debugowania
+ * @param[in] i : jednomian do druku
+ * */
+void monoPrint(Mono *m){
+	Poly p = m->p;
+	poly_exp_t ex = m->exp;
+	printf("(");
+	polyPrint(&p);
+	printf(",%d)", ex);
+	if(m->next != NULL){
+		printf("+");
+		monoPrint(m->next);
+	}
+}
 
 /**
  * @brief Tworzy wielomian, który jest współczynnikiem.
@@ -288,9 +323,7 @@ Poly PolyAdd(const Poly *p, const Poly *q){
 	w.val = 0;
 	pm = p->first;
 	qm = q->first;
-	bool czyZero;
 	while(pm != NULL && qm != NULL){
-		czyZero = false;
 		if(pm->exp == qm->exp){
 			curr->exp = pm->exp;
 			curr->p = PolyAdd(&pm->p, &qm->p);
