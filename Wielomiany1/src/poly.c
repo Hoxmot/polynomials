@@ -162,8 +162,7 @@ void PolyDestroy(Poly *p){
 void MonoDestroy(Mono *m){
 
 	PolyDestroy(&m->p);
-	//m->p = NULL;
-	m->exp = 0;
+		m->exp = 0;
 	if(m->next != NULL){
 		MonoDestroy(m->next);
 		free(m->next);
@@ -250,6 +249,7 @@ Poly PolyAddCoeff(const Poly *p, poly_coeff_t x){
 		}
 		m = m->next;
 		prev = curr;
+		curr = NULL;
 		curr = malloc(sizeof(struct Mono));
 		curr->exp = 0;
 		curr->next = NULL;
@@ -299,8 +299,10 @@ Poly PolyAdd(const Poly *p, const Poly *q){
 			curr->p = PolyAdd(&pm->p, &qm->p);
 			pm = pm->next;
 			qm = qm->next;
-			if(PolyIsZero(&curr->p))
+			if(PolyIsZero(&curr->p)){
 				MonoDestroy(curr);
+				continue;
+			}
 		}
 		else if(pm->exp > qm->exp){
 			curr->exp = pm->exp;
@@ -319,8 +321,10 @@ Poly PolyAdd(const Poly *p, const Poly *q){
 		curr->next = NULL;
 		prev->next = curr;
 	}
-	if(prev == NULL && pm == NULL && qm == NULL)
+	if(prev == NULL && pm == NULL && qm == NULL){
+		free(curr);
 		w.first = NULL;
+	}
 	else if(pm == NULL && qm != NULL){
 		*curr = MonoClone(qm);
 	}
@@ -490,7 +494,8 @@ Poly PolyMul(const Poly *p, const Poly *q){
 	}
 	unsigned len;
 	len = a * b;
-	Mono monos[len];
+	Mono *monos;
+	monos = calloc(len, sizeof(struct Mono));
 	pm = p->first;
 	unsigned curr = 0;
 	while(pm != NULL){
@@ -499,12 +504,21 @@ Poly PolyMul(const Poly *p, const Poly *q){
 			monos[curr].next = NULL;
 			monos[curr].exp = pm->exp * qm->exp;
 			monos[curr].p = PolyMul(&pm->p, &qm->p);
+			if(PolyIsZero(&monos[curr].p)){
+				monos[curr].next = NULL;
+				monos[curr].exp = 0;
+				PolyDestroy(&monos[curr].p);
+			}
+			else {
+				curr++;
+			}
 			qm = qm->next;
-			curr++;
 		}
 		pm = pm->next;
 	}
-	return PolyAddMonos(len, monos);
+	Poly w = PolyAddMonos(curr, monos);
+	free(monos);
+	return w;
 }
 
 /**
@@ -662,7 +676,7 @@ bool PolyIsEq(const Poly *p, const Poly *q){
 			qm = qm->next;
 		else if(pm->exp != qm->exp)
 			return false;
-		else { //*pm->exp == *qm->exp
+		else { //pm->exp == qm->exp
 			if(PolyIsEq(&pm->p, &qm->p) != true)
 				return false;
 			pm = pm->next;
@@ -715,10 +729,10 @@ Poly PolyAt(const Poly *p, poly_coeff_t x){
 	if(PolyIsZero(p) == true)
 		return PolyZero();
 	if(PolyIsCoeff(p) == true)
-		return *p;
+		return PolyClone(p);
 	if(x == 0)
 		return PolyZero();
-	Poly w;
+	Poly w, w1;
 	Mono *pm;
 	pm = p->first;
 	//printf("%ld <-> %ld\n", coeff_pow(x, pm->exp), pm->exp);
@@ -727,8 +741,10 @@ Poly PolyAt(const Poly *p, poly_coeff_t x){
 	while(pm != NULL){
 		Poly tmp;
 		tmp = PolyMulCoeff(&pm->p, coeff_pow(x, pm->exp));
-		w = PolyAdd(&w, &tmp);
+		w1 = PolyAdd(&w, &tmp);
+		PolyDestroy(&w);
 		PolyDestroy(&tmp);
+		w = w1;
 		pm = pm->next;
 	}
 	return w;
