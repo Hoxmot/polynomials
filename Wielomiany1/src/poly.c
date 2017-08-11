@@ -657,7 +657,7 @@ bool PolyIsEq(const Poly *p, const Poly *q){
 		return false;
 	if(PolyIsCoeff(p) == true){
 		if(PolyIsCoeff(q) == true){
-			if(q->val == p->val)
+			if(p->val == q->val)
 				return true;
 			else return false;
 		}
@@ -668,7 +668,7 @@ bool PolyIsEq(const Poly *p, const Poly *q){
 	
 	Mono *pm, *qm;
 	pm = p->first;
-	qm = p->first;
+	qm = q->first;
 	while(pm != NULL && qm != NULL){
 		if(PolyIsZero(&pm->p) == true)
 			pm = pm->next;
@@ -677,7 +677,7 @@ bool PolyIsEq(const Poly *p, const Poly *q){
 		else if(pm->exp != qm->exp)
 			return false;
 		else { //pm->exp == qm->exp
-			if(PolyIsEq(&pm->p, &qm->p) != true)
+			if(!PolyIsEq(&pm->p, &qm->p))
 				return false;
 			pm = pm->next;
 			qm = qm->next;
