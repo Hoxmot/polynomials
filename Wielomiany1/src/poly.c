@@ -377,36 +377,28 @@ Poly PolyAddMonos(unsigned count, const Mono monos[]){
 	curr = w.first;
 	*/
 	prev = NULL;
-	Mono *m;
 	for(int i = count - 1; i >= 0; --i){
 		if(w.first != NULL){
-			m = malloc(sizeof(struct Mono));
-			*m = monos[i];
-			if(curr->exp == m->exp){
-				tmp = PolyAdd(&curr->p, &m->p);
-				MonoDestroy(m);
-				free(m);
+			if(curr->exp == monos[i].exp){
+				tmp = PolyAdd(&curr->p, &monos[i].p);
 				PolyDestroy(&curr->p);
 				curr->p = tmp;
 				if(PolyIsZero(&curr->p)){
 					MonoDestroy(curr);
 					free(curr);
-					if(prev != NULL)
+					if(prev != NULL){
+						prev->next = NULL;
 						curr = prev;
+					}
 					else {
 						w.first = NULL;
 						curr = w.first;
-						/*
-						w.first = malloc(sizeof(struct Mono));
-						curr = w.first;
-						curr->exp = 0;
-						curr->next = NULL;
-						*/
 					}
 				}
 			}
 			else {
-				curr->next = m;
+				curr->next = malloc(sizeof(struct Mono));
+				*curr->next = monos[i];
 				prev = curr;
 				curr = curr->next;
 			}
@@ -502,7 +494,7 @@ Poly PolyMul(const Poly *p, const Poly *q){
 		qm = q->first;
 		while(qm != NULL){
 			monos[curr].next = NULL;
-			monos[curr].exp = pm->exp * qm->exp;
+			monos[curr].exp = pm->exp + qm->exp;
 			monos[curr].p = PolyMul(&pm->p, &qm->p);
 			if(PolyIsZero(&monos[curr].p)){
 				monos[curr].next = NULL;
