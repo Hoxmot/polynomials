@@ -94,6 +94,15 @@ Mono MonoFromPoly(const Poly *p, poly_exp_t e){
 }
 
 /**
+ * Sprawdza, czy wielomian jest współczynnikiem.
+ * @param[in] p : wielomian
+ * @return Czy wielomian jest współczynnikiem?
+ */
+bool PolyIsCoeff(const Poly *p){
+  return p->first == NULL;
+}
+
+/**
  * @brief Sprawdza, czy wielomian jest tożsamościowo równy zeru.
  * @param[in] p : wielomian
  * @return Czy wielomian jest równy zero?
@@ -664,6 +673,7 @@ poly_exp_t PolyDeg(const Poly *p){
  * @return Czy p wynosi x po skróceniu
  */
 bool PolyIsEqCoeff(const Poly *p, poly_coeff_t x){
+	printf("PolyIsEqCoeff\n");
 	polyPrint(p);
 	printf("\n");
 	if(p->first == NULL)

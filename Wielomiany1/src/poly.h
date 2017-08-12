@@ -76,9 +76,7 @@ Mono MonoFromPoly(const Poly *p, poly_exp_t e);
  * @param[in] p : wielomian
  * @return Czy wielomian jest współczynnikiem?
  */
-static inline bool PolyIsCoeff(const Poly *p){
-  return p->first == NULL;
-}
+bool PolyIsCoeff(const Poly *p){
 
 /**
  * Sprawdza, czy wielomian jest tożsamościowo równy zeru.
