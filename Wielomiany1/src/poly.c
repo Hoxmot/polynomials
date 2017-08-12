@@ -94,18 +94,6 @@ Mono MonoFromPoly(const Poly *p, poly_exp_t e){
 }
 
 /**
- * @brief Sprawdza, czy wielomian jest współczynnikiem.
- * @param[in] p : wielomian
- * @return Czy wielomian jest współczynnikiem?
- */
-bool PolyIsCoeff(const Poly *p)
-{
-    if(p->first == NULL) ///< Jeśli nie posiada listy jednomianów, to jest współczynnikiem.
-		return true;
-	else return false; ///< Nie jest WPP.
-}
-
-/**
  * @brief Sprawdza, czy wielomian jest tożsamościowo równy zeru.
  * @param[in] p : wielomian
  * @return Czy wielomian jest równy zero?
@@ -398,19 +386,32 @@ Poly PolyAddMonos(unsigned count, const Mono monos[]){
 				}
 			}
 			else {
-				curr->next = malloc(sizeof(struct Mono));
-				*curr->next = monos[i];
-				prev = curr;
-				curr = curr->next;
-				curr->next = NULL;
+				if(!PolyIsZero(&monos[i].p)){
+					curr->next = malloc(sizeof(struct Mono));
+					*curr->next = monos[i];
+					prev = curr;
+					curr = curr->next;
+					curr->next = NULL;
+				}
 			}
 		}
 		else {
-			w.first = malloc(sizeof(struct Mono));
-			w.first->next = NULL;
-			w.first->exp = 0;
-			*w.first = monos[i];
-			curr = w.first;
+			if(!PolyIsZero(&monos[i].p)){
+				w.first = malloc(sizeof(struct Mono));
+				w.first->next = NULL;
+				w.first->exp = 0;
+				*w.first = monos[i];
+				curr = w.first;
+			}
+		}
+	}
+	if(w.first == NULL)
+		return PolyZero();
+	if(w.first->exp == 0){
+		if(PolyIsCoeff(&w.first->p)){
+			Poly res = PolyClone(&w.first->p);
+			PolyDestroy(&w);
+			return res;
 		}
 	}
 	return w;
@@ -437,23 +438,44 @@ Poly PolyMulCoeff(const Poly *p, poly_coeff_t x){
 	
 	Poly w;	
 	Mono *pm, *m, *prev;
-	m = malloc(sizeof(struct Mono));
-	m->exp = 0;
-	m->next = NULL;
 	pm = p->first;
-	w.first = m;
+	prev = NULL;
+	w.first = NULL;
+	w.val = 0;
 	while(pm != NULL){
-		m->p = PolyMulCoeff(&(pm->p), x);
-		m->exp = pm->exp;
-		pm = pm->next;
-		if(pm != NULL){
-			prev = m;
+		if(w.first != NULL){
+			m->p = PolyMulCoeff(&(pm->p), x);
+			m->exp = pm->exp;
+			pm = pm->next;
+			if(PolyIsZero(&m->p)){
+				MonoDestroy(m);
+				free(m);
+				if(prev == NULL){
+					w.first = NULL;
+					continue;
+				}
+				else if(pm != NULL){
+					m = prev;
+					prev->next = NULL;
+				}
+			}
+			if(pm != NULL){
+				prev = m;
+				m = malloc(sizeof(struct Mono));
+				m->exp = 0;
+				m->next = NULL;
+				prev->next = m;
+			}
+		}
+		else {
 			m = malloc(sizeof(struct Mono));
 			m->exp = 0;
 			m->next = NULL;
-			prev->next = m;
+			w.first = m;
 		}
 	}
+	if(w.first == NULL)
+		return PolyZero();
 	return w;
 }
 
@@ -636,6 +658,37 @@ poly_exp_t PolyDeg(const Poly *p){
 }
 
 /**
+ * @brief Funkcja, która sprawdza w głąb, czy Wielomian jest równy współczynnikowi
+ * @param[in] p : wielomian
+ * @param[in] x : wartość
+ * @return Czy p wynosi x po skróceniu
+ */
+bool PolyIsEqCoeff(const Poly *p, poly_coeff_t x){
+	polyPrint(p);
+	printf("\n");
+	if(p->first == NULL)
+		printf("true\n");
+	else printf("false\n");
+	if(PolyIsCoeff(p))
+		printf("PolyIsCoeff\n");
+		if(p->val == x)
+			printf("equal\n");
+		else {
+			printf("not equal\n");
+			printf("%ld != %ld\n", p->val, x);
+		}
+		return p->val == x;
+	if(p->first->exp == 0){
+		printf("p->first->exp == 0\n");
+		return PolyIsEqCoeff(&p->first->p, x);
+	}
+	else{
+		printf("p->first->exp = %d\n", p->first->exp);
+	}
+	return false;
+}
+
+/**
  * @brief Sprawdza równość dwóch wielomianów.
  * @param[in] p : wielomian
  * @param[in] q : wielomian
@@ -650,16 +703,14 @@ bool PolyIsEq(const Poly *p, const Poly *q){
 	if(PolyIsZero(q) == true)
 		return false;
 	if(PolyIsCoeff(p) == true){
-		if(PolyIsCoeff(q) == true){
-			if(p->val == q->val)
-				return true;
-			else return false;
-		}
-		else return false;
+		printf("p jest coeff\n");
+		return PolyIsEqCoeff(q, p->val);
 	}
-	if(PolyIsCoeff(q) == true)
-		return false;
-	
+	if(PolyIsCoeff(q) == true){
+		printf("q jest coeff\n");
+		return PolyIsEqCoeff(p, q->val);
+	}
+	printf("Nie jest coeff\n");
 	Mono *pm, *qm;
 	pm = p->first;
 	qm = q->first;
