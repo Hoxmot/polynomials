@@ -3,7 +3,7 @@
 
    @author Jakub Pawlewicz <pan@mimuw.edu.pl>, Kamil Bladoszewski <kb392558@students.mimuw.edu.pl>
    @copyright Uniwersytet Warszawski
-   @date 2017-04-24, 2017-05-14
+   @date 2017-04-24, 2017-05-14, 2017-08-12
 */
 
 #ifndef __POLY_H__

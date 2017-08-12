@@ -3,7 +3,7 @@
 
    @author Jakub Pawlewicz <pan@mimuw.edu.pl>, Kamil Bladoszewski <kb392558@students.mimuw.edu.pl>
    @copyright Uniwersytet Warszawski
-   @date 2017-04-24, 2017-05-14
+   @date 2017-04-24, 2017-05-14, 2017-08-12
 */
 
 #include "poly.h"
@@ -114,23 +114,6 @@ bool PolyIsZero(const Poly *p){
 			return true;
 		else return false;
 	}
-	//TODO
-	/*
-	else {
-		Mono *m;
-		m = p->first;
-		while(m != NULL){
-			if(PolyIsZero(&m->p) == true){
-				if(m->next == NULL)
-					return true;
-				else {
-					m = m->next;
-				}
-			}
-			else return false;
-		}
-	}
-	*/
 	return false;
 
 }
@@ -356,23 +339,12 @@ int cmp_mono(const void *p, const void *q){
  * @return wielomian będący sumą jednomianów
  */
 Poly PolyAddMonos(unsigned count, const Mono monos[]){
-	//quick_sort(&monos, 0, count - 1);
-	/*for(int i = 0; i < count; i++){
-		Mono *tmp;
-		tmp = &monos[i];
-		assert(tmp != NULL);
-	}*/
+
 	qsort((void *)monos, count, sizeof(struct Mono), &cmp_mono);
 	Poly w, tmp;
 	Mono *curr, *prev;
 	w.first = NULL;
 	w.val = 0;
-	/*
-	w.first = malloc(sizeof(struct Mono));
-	w.val = 0;
-	*w.first = monos[count - 1];
-	curr = w.first;
-	*/
 	prev = NULL;
 	for(int i = count - 1; i >= 0; --i){
 		if(w.first != NULL){
@@ -439,12 +411,6 @@ Poly PolyMulCoeff(const Poly *p, poly_coeff_t x){
 
 	if(x == 1)
 		return PolyClone(p);
-
-	/*
-	if(x == (-1))
-		return PolyNeg(p);
-	*/
-	
 	Poly w;	
 	Mono *pm, *m, *prev;
 	pm = p->first;
@@ -552,33 +518,7 @@ Poly PolyMul(const Poly *p, const Poly *q){
  * @return `-p`
  */
 Poly PolyNeg(const Poly *p){
-	//Poly minus = PolyFromCoeff(-1);
 	return PolyMulCoeff(p, -1);
-	/*
-	if(PolyIsZero(p) == true)
-		return PolyClone(p);
-	Poly *w;
-	w = malloc(sizeof(struct Poly));
-	if(PolyIsCoeff(p) == true){
-		*w = PolyClone(p);
-		w->val *= (-1);
-		return *w;
-	}
-	Mono *curr, *pm, *prev;
-	curr = malloc(sizeof(struct Mono));
-	w->first = curr;
-	while(pm != NULL){
-		curr->exp = pm->exp;
-		*curr->p = PolyNeg(pm->p);
-		pm = pm->next;
-		if(pm != NULL){
-			prev = curr;
-			curr = malloc(sizeof(struct Mono));
-			prev->next = curr;
-		}
-	}
-	return *w;
-	*/
 }
 
 /**
