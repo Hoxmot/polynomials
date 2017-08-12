@@ -362,7 +362,7 @@ Poly PolyAddMonos(unsigned count, const Mono monos[]){
 		tmp = &monos[i];
 		assert(tmp != NULL);
 	}*/
-	qsort(monos, count, sizeof(struct Mono), &cmp_mono);
+	qsort((void *)monos, count, sizeof(struct Mono), &cmp_mono);
 	Poly w, tmp;
 	Mono *curr, *prev;
 	w.first = NULL;
