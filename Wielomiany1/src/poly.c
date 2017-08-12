@@ -673,27 +673,11 @@ poly_exp_t PolyDeg(const Poly *p){
  * @return Czy p wynosi x po skróceniu
  */
 bool PolyIsEqCoeff(const Poly *p, poly_coeff_t x){
-	printf("PolyIsEqCoeff\n");
-	polyPrint(p);
-	printf("\n");
-	if(p->first == NULL)
-		printf("true\n");
-	else printf("false\n");
-	if(PolyIsCoeff(p))
-		printf("PolyIsCoeff\n");
-		if(p->val == x)
-			printf("equal\n");
-		else {
-			printf("not equal\n");
-			printf("%ld != %ld\n", p->val, x);
-		}
+	if(PolyIsCoeff(p)){
 		return p->val == x;
-	if(p->first->exp == 0){
-		printf("p->first->exp == 0\n");
-		return PolyIsEqCoeff(&p->first->p, x);
 	}
-	else{
-		printf("p->first->exp = %d\n", p->first->exp);
+	if(p->first->exp == 0){
+		return PolyIsEqCoeff(&p->first->p, x);
 	}
 	return false;
 }
@@ -713,14 +697,11 @@ bool PolyIsEq(const Poly *p, const Poly *q){
 	if(PolyIsZero(q) == true)
 		return false;
 	if(PolyIsCoeff(p) == true){
-		printf("p jest coeff\n");
 		return PolyIsEqCoeff(q, p->val);
 	}
 	if(PolyIsCoeff(q) == true){
-		printf("q jest coeff\n");
 		return PolyIsEqCoeff(p, q->val);
 	}
-	printf("Nie jest coeff\n");
 	Mono *pm, *qm;
 	pm = p->first;
 	qm = q->first;
@@ -790,7 +771,6 @@ Poly PolyAt(const Poly *p, poly_coeff_t x){
 	Poly w, w1;
 	Mono *pm;
 	pm = p->first;
-	//printf("%ld <-> %ld\n", coeff_pow(x, pm->exp), pm->exp);
 	w = PolyMulCoeff(&pm->p, coeff_pow(x, pm->exp));
 	pm = pm->next;
 	while(pm != NULL){
