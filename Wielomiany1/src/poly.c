@@ -381,6 +381,7 @@ Poly PolyAddMonos(unsigned count, const Mono monos[]){
 		if(w.first != NULL){
 			if(curr->exp == monos[i].exp){
 				tmp = PolyAdd(&curr->p, &monos[i].p);
+				PolyDestroy(&monos[i].p);
 				PolyDestroy(&curr->p);
 				curr->p = tmp;
 				if(PolyIsZero(&curr->p)){
@@ -401,6 +402,7 @@ Poly PolyAddMonos(unsigned count, const Mono monos[]){
 				*curr->next = monos[i];
 				prev = curr;
 				curr = curr->next;
+				curr->next = NULL;
 			}
 		}
 		else {
